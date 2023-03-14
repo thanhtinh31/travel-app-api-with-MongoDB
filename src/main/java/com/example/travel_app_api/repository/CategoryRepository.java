@@ -13,5 +13,7 @@ import java.util.List;
 public interface CategoryRepository extends MongoRepository<Category,String> {
     @Query("{ 'name' : { $regex: /?0/ ,$options:'i' } }")
     List<Category> searchCategory(String key);
+    @Query("{ 'name' : ?0 }")
+    Category findByName(String name);
 
 }

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/category")
@@ -24,12 +25,25 @@ public class CategoryController {
         return categories;
     }
     @PostMapping
-    public Category addCategory(@RequestBody Category category){
+    public Map<String, Object> addCategory(@RequestBody Category category){
         return categoryService.addCategory(category);
     }
     @GetMapping("/search")
     private List<Category> search(@RequestParam(name="key",required = false,defaultValue = "") String key){
         return categoryService.searchCategory(key);
     }
+    @GetMapping("/{id}")
+    public Category findById(@PathVariable String id){
+        return categoryService.findById(id);
+    }
+    @PutMapping()
+    public Category updateCategory(@RequestBody Category category){
+        return categoryService.updateCategory(category);
+    }
+    @DeleteMapping("/{id}")
+    public String deleteCategory(@PathVariable String id){
+        return categoryService.deleteCategory(id);
+    }
+
 
 }

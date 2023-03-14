@@ -30,7 +30,7 @@ public class Tour {
     private int status;
     @DBRef
     private Account account;
-    private Category category;
+    private String idCategory;
 //    private List<Rating> listRating;
 //
 //    private List<Schedule> listSchedule;

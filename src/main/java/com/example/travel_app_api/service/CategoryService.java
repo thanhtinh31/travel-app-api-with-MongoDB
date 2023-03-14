@@ -8,7 +8,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.security.Key;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -19,10 +22,42 @@ public class CategoryService {
         if(page<=0) page=1;
         return categoryRepository.findAll(PageRequest.of(page-1,size,Sort.by(sort).descending()));
     };
+    public Category findById(String id){
+        try {
+            return categoryRepository.findById(id).get();
+        }catch (Exception e){
+            return null;
+        }
+
+    }
     public List<Category> searchCategory(String key){
         return categoryRepository.searchCategory(key);
     }
-    public Category addCategory(Category category){
-        return categoryRepository.save(category);
+    public Map<String,Object> addCategory(Category category){
+        Map<String,Object> m=new HashMap<>();
+        if(categoryRepository.findByName(category.getName())==null){
+            categoryRepository.save(category);
+            m.put("message","Thêm mới thành công");
+            m.put("status","1");
+        }
+        else{
+            m.put("message","Tên danh mục đã tồn tại");
+            m.put("status","0");
+        }
+
+        return m;
+    }
+    public Category updateCategory(Category category){
+        Category category1=categoryRepository.findById(category.getId()).get();
+        category1.setName(category.getName());
+        category1.setContent(category.getContent());
+        category1.setImage(category.getImage());
+        category1.setStatus(category.isStatus());
+        return categoryRepository.save(category1);
+
+    }
+    public String deleteCategory(String id){
+            categoryRepository.deleteById(id);
+            return "Deleted";
     }
 }
