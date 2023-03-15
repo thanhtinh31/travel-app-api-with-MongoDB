@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/schedule")
@@ -18,9 +19,21 @@ public class ScheduleController {
     public List<Schedule> getListSchedule(@PathVariable String idTour){
         return scheduleService.getListScheduleByIdTour(idTour);
     }
+    @GetMapping("/getschedule")
+    public Schedule getSchedule(@RequestParam String idSchedule){
+        return scheduleService.getSchedule(idSchedule);
+    }
     @PostMapping()
-    public Schedule addSchedule(@RequestBody Schedule schedule){
-        return scheduleService.add(schedule);
+    public Map<String,Object> addSchedule(@RequestBody Schedule schedule){
+        return scheduleService.addSchedule(schedule);
+    }
+    @PutMapping
+    public Map<String,Object> updateSchedule(@RequestBody Schedule schedule){
+            return scheduleService.updateSchedule(schedule);
+    }
+    @DeleteMapping
+    public String daleteSchedule(@RequestParam(defaultValue = "") String id){
+        return scheduleService.deleteSchedule(id);
     }
 
 }

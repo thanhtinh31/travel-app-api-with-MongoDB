@@ -20,7 +20,7 @@ public class Schedule {
     private String tourGuide;
 
     private String phone;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private Date dayStart;
 
     private String idTour;
