@@ -46,4 +46,9 @@ public class TourController {
         return tourService.deleteTour(id);
     }
 
+    @PutMapping
+    public Tour update(@RequestBody Tour tour){
+        return tourService.updateTour(tour);
+    }
+
 }

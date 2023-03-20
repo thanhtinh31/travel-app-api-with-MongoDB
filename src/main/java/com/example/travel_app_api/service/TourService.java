@@ -30,6 +30,7 @@ public class TourService {
     }
     public Tour updateTour(Tour tour){
         Tour tour1=tourRepository.findById(tour.getId()).get();
+        tour1.setTitle(tour.getTitle());
         tour1.setImage(tour.getImage());
         tour1.setDescribe(tour.getDescribe());
         tour1.setAddress(tour.getAddress());

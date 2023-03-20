@@ -5,10 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.text.DateFormat;
 import java.util.Date;
-import java.util.List;
 @Document(collection = "schedule")
 @Data
 @AllArgsConstructor
@@ -25,5 +22,4 @@ public class Schedule {
 
     private String idTour;
 
-    //private List<Invoice> listInvoice;
 }
