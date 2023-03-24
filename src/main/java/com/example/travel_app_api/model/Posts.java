@@ -17,5 +17,5 @@ public class Posts {
     private String content;
     private String image;
     private String place;
-    private Account account;
+    private String idAccount;
 }

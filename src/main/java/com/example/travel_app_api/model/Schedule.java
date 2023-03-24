@@ -13,13 +13,13 @@ import java.util.Date;
 public class Schedule {
     @Id
     private String id;
-
     private String tourGuide;
-
     private String phone;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
     private Date dayStart;
-
+    private String addressStart;
+    private int maxPeople;
+    private int daDat;
     private String idTour;
 
 }

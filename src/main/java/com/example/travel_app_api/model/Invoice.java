@@ -25,13 +25,12 @@ public class Invoice {
     private String address;
     private String note;
     private String payments;
-    private String bankTranNo;
+    private String idPayment;
     private String payDay;
     private String Bank;
     private int people;
     private double amount;
-
+    private String currency;
     private String idSchedule;
-
     private String idAccount;
 }

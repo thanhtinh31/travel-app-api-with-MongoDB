@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/invoice")
@@ -13,6 +14,14 @@ import java.util.List;
 public class InvoiceController {
     @Autowired
     private InvoiceService invoiceService;
+    @GetMapping("")
+    public List<Invoice> getListIncoice(){
+        return invoiceService.getListInvoice();
+    }
+    @GetMapping("/detail/{id}")
+    public Map<String,Object> getDetailInvoice(@PathVariable String id){
+        return invoiceService.getDetailInvoice(id);
+    }
     @GetMapping("/schedule/{id}")
     public List<Invoice> getListIncoiceByIdSchedule(@PathVariable String id){
         return invoiceService.getListInvoiceByIdSchedule(id);
@@ -22,8 +31,12 @@ public class InvoiceController {
         return invoiceService.getListInvoiceByIdAccount(id);
     }
     @PostMapping
-    public Invoice createInvoice(@RequestBody Invoice invoice){
+    public Map<String, Object> createInvoice(@RequestBody Invoice invoice){
         return invoiceService.addNewInvoice(invoice);
+    }
+    @PutMapping
+    public Invoice updateInvoice(@RequestBody Invoice invoice){
+        return invoiceService.updateInvoice(invoice);
     }
 
 }

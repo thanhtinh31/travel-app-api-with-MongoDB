@@ -1,6 +1,4 @@
 package com.example.travel_app_api.service;
-
-import com.example.travel_app_api.model.Category;
 import com.example.travel_app_api.model.Tour;
 import com.example.travel_app_api.repository.TourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,18 +7,32 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TourService {
     @Autowired
     TourRepository tourRepository;
+    @Autowired
+    ScheduleService scheduleService;
     public Page<Tour> getListTour(int page, int size, String sort){
         if(page<=0) page=1;
         return tourRepository.findAll(PageRequest.of(page-1,size, Sort.by(sort).descending()));
     };
-    public Tour addTour(Tour tour){
-        return tourRepository.save(tour);
+    public Map<String,Object> addTour(Tour tour) {
+        Map<String, Object> m = new HashMap<>();
+        if (tour.getIdAccount() == null) {
+            m.put("message", "Khong thanh cong");
+            m.put("status", "0");
+        } else {
+            tourRepository.save(tour);
+            m.put("message", "Them moi tour thanh cong");
+            m.put("status", "1");
+            m.put("tour", tour);
+        }
+        return m;
     }
     public Tour getTourById(String id){
         return tourRepository.findById(id).get();
@@ -45,9 +57,14 @@ public class TourService {
         tour1.setIdCategory(tour.getIdCategory());
         return tourRepository.save(tour1);
     }
-    public String deleteTour(String id){
-        tourRepository.deleteById(id);
-        return "deleted";
+    public String deleteTour(String idTour){
+        if(scheduleService.getListScheduleByIdTour(idTour).size()!=0){
+            return "Vui long huy tat ca lich trinh de co the xoa tour";
+        }
+        else {
+            tourRepository.deleteById(idTour);
+            return "Xoa tour thanh cong";
+        }
     }
     public List<Tour> searchTour(String key){
         return tourRepository.searchTour(key);

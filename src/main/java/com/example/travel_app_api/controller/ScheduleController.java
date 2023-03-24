@@ -19,10 +19,19 @@ public class ScheduleController {
     public List<Schedule> getListSchedule(@PathVariable String idTour){
         return scheduleService.getListScheduleByIdTour(idTour);
     }
+    @GetMapping("/all")
+    public List<Schedule> getAllListSchedule(){
+        return scheduleService.getListSchedule();
+    }
+    @GetMapping("/active/{idTour}")
+    public List<Schedule> getListScheduleActive(@PathVariable String idTour){
+        return scheduleService.getListScheduleByIdTourActive(idTour);
+    }
     @GetMapping("/getschedule")
-    public Schedule getSchedule(@RequestParam String idSchedule){
+    public Map<String, Object> getSchedule(@RequestParam String idSchedule){
         return scheduleService.getSchedule(idSchedule);
     }
+
     @PostMapping()
     public Map<String,Object> addSchedule(@RequestBody Schedule schedule){
         return scheduleService.addSchedule(schedule);

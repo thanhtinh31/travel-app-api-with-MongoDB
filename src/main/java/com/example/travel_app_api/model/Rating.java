@@ -19,6 +19,6 @@ public class Rating {
     private String comment;
     private Date time;
     private int star;
-    private Account accountRating;
-    private Tour tour;
+    private String idAccount;
+    private String idTour;
 }

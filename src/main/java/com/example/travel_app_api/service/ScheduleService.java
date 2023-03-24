@@ -1,7 +1,9 @@
 package com.example.travel_app_api.service;
 
 import com.example.travel_app_api.model.Schedule;
+import com.example.travel_app_api.model.Tour;
 import com.example.travel_app_api.repository.ScheduleRepository;
+import com.example.travel_app_api.repository.TourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +11,7 @@ import java.awt.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,13 +21,31 @@ import java.util.Map;
 public class ScheduleService {
     @Autowired
     private ScheduleRepository scheduleRepository;
+    @Autowired
+    private TourRepository tourRepository;
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
     public List<Schedule> getListScheduleByIdTour(String idTour){
         return scheduleRepository.getListScheduleByTourId(idTour);
     }
-    public Schedule getSchedule(String id){
-        return scheduleRepository.findById(id).get();
+    public List<Schedule> getListSchedule(){
+        return scheduleRepository.findAll();
     }
+    public List<Schedule> getListScheduleByIdTourActive(String idTour){
+        long millis = System.currentTimeMillis();
+        Date date = new java.sql.Date(millis);
+        System.out.println(date);
+        return scheduleRepository.getListScheduleByTourIdActive(idTour,date);
+    }
+    public Map<String,Object> getSchedule(String id){
+        Map<String,Object> m=new HashMap<>();
+        Schedule schedule =scheduleRepository.findById(id).get();
+        Tour tour=tourRepository.findById(schedule.getIdTour()).get();
+        m.put("tour",tour);
+        m.put("schedule",schedule);
+        return m;
+
+    }
+
     public Map<String,Object> addSchedule(Schedule schedule){
         Map<String,Object> m=new HashMap<>();
         Date dayNow=new Date();
@@ -78,7 +99,6 @@ public class ScheduleService {
 
         for(int i=0;i<list.size();i++){
             String strDate = formatter.format(list.get(i).getDayStart());
-            System.out.println(strDate);
             if(strDate.equals(day)) return 1;
         }
         return 0;
@@ -87,6 +107,7 @@ public class ScheduleService {
         scheduleRepository.deleteById(id);
         return "deleted";
     }
+
 
 
 

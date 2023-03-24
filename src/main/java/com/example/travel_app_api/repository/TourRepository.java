@@ -11,8 +11,9 @@ import java.util.List;
 @Repository
 public interface TourRepository extends MongoRepository<Tour,String> {
 
-    @Query("{ 'idCategory' : ?0 }")
+    @Query("{'idCategory':{$all:[?0]}}")
     List<Tour> getListTourByCategory(String idCategory);
-    @Query("{$or: [{'title': { $regex: /?0/ ,$options:'i' }}, {'address': { $regex: /?0/ ,$options:'i' }}]}")
+  //  @Query("{$or: [{'title': { $regex: /?0/ ,$options:'i' }}, {'address': { $regex: /?0/ ,$options:'i' }}]}")
+    @Query("{ $text:{ $search: ?0} }")
     List<Tour> searchTour(String key);
 }

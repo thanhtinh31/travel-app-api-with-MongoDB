@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/tour")
@@ -38,7 +39,7 @@ public class TourController {
     }
 
     @PostMapping
-    public Tour addTour(@RequestBody Tour tour){
+    public Map<String, Object> addTour(@RequestBody Tour tour){
         return tourService.addTour(tour);
     }
     @DeleteMapping("/{id}")

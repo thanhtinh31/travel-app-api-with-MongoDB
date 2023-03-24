@@ -18,6 +18,7 @@ public class AccountService {
     public List<Account> listAcount(){
         return accountRepository.findAll();
     }
+    public Account getAccountById(String id){return accountRepository.findById(id).get();}
     public Map<String,Object> login(String email,String password){
         Map<String,Object> m=new HashMap<>();
         Account account=accountRepository.getAcountByEmail(email);

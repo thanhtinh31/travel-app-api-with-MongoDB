@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.text.DateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +15,11 @@ import java.util.List;
 public interface ScheduleRepository extends MongoRepository<Schedule, String> {
     @Query("{ 'idTour' : ?0 }")
     List<Schedule> getListScheduleByTourId(String idTour);
+    @Query("{$and: [{ 'idTour' : ?0 }, {'dayStart': {$gt:?1}}]}") //{$or: [{ 'idTour' : ?0 }, {'dayStart': { }}]}
+    List<Schedule> getListScheduleByTourIdActive(String idTour, Date day);
+    @Query("{$and: [{ 'idTour' : ?0 }, {'dayStart': {$lt:?1}}]}") //{$or: [{ 'idTour' : ?0 }, {'dayStart': { }}]}
+    List<Schedule> getListScheduleByTourIdPass(String idTour, Date day);
+
 
 
 
