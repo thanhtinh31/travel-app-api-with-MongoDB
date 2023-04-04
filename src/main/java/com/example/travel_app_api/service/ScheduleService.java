@@ -33,8 +33,14 @@ public class ScheduleService {
     public List<Schedule> getListScheduleByIdTourActive(String idTour){
         long millis = System.currentTimeMillis();
         Date date = new java.sql.Date(millis);
-        System.out.println(date);
         return scheduleRepository.getListScheduleByTourIdActive(idTour,date);
+    }
+    public List<Schedule> getListScheduleActive(){
+        long millis = System.currentTimeMillis();
+        Date date = new java.sql.Date(millis);
+        List<Schedule> list=scheduleRepository.getListScheduleActive(date);
+
+        return list;
     }
     public Map<String,Object> getSchedule(String id){
         Map<String,Object> m=new HashMap<>();

@@ -24,8 +24,12 @@ public class ScheduleController {
         return scheduleService.getListSchedule();
     }
     @GetMapping("/active/{idTour}")
-    public List<Schedule> getListScheduleActive(@PathVariable String idTour){
+    public List<Schedule> getListScheduleActiveById(@PathVariable String idTour){
         return scheduleService.getListScheduleByIdTourActive(idTour);
+    }
+    @GetMapping("/all/active")
+    public List<Schedule> getListScheduleActive(){
+        return scheduleService.getListScheduleActive();
     }
     @GetMapping("/getschedule")
     public Map<String, Object> getSchedule(@RequestParam String idSchedule){
@@ -44,7 +48,5 @@ public class ScheduleController {
     public String daleteSchedule(@RequestParam(defaultValue = "") String id){
         return scheduleService.deleteSchedule(id);
     }
-
-
 
 }

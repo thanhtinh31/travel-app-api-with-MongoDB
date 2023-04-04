@@ -68,12 +68,11 @@ public class PaypalService {
             invoice.setPayDay(payment.getUpdateTime());
             invoice.setIdPayment(payment.getId());
             invoiceService.updateInvoice(invoiceService.updateInvoice(invoice));
-            return "window.location='/home';";
+            return "Thanh toán thành công";
             // return payment.toJSON();
         }
         else {
             return "thanh toan khong thanh cong";
         }
     }
-
 }

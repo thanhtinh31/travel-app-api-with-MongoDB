@@ -2,6 +2,7 @@ package com.example.travel_app_api.service;
 
 import com.example.travel_app_api.model.Account;
 import com.example.travel_app_api.repository.AccountRepository;
+import com.google.firebase.auth.hash.Bcrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +12,13 @@ import java.util.Map;
 
 @Service
 public class AccountService {
+
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
     private EmailSenderService emailSenderService;
     public List<Account> listAcount(){
+
         return accountRepository.findAll();
     }
     public Account getAccountById(String id){return accountRepository.findById(id).get();}
