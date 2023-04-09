@@ -4,6 +4,7 @@ import com.example.travel_app_api.model.Schedule;
 import com.example.travel_app_api.model.Tour;
 import com.example.travel_app_api.repository.ScheduleRepository;
 import com.example.travel_app_api.repository.TourRepository;
+import com.example.travel_app_api.response.ScheduleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +13,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ScheduleService {
@@ -26,6 +25,14 @@ public class ScheduleService {
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
     public List<Schedule> getListScheduleByIdTour(String idTour){
         return scheduleRepository.getListScheduleByTourId(idTour);
+    }
+    public List<ScheduleResponse> listSchedule(){
+        List<ScheduleResponse> scheduleResponses =new ArrayList<>() ;
+        List<Tour> list=tourRepository.findAll();
+        for(int i=0;i<list.size();i++){
+            scheduleResponses.add(new ScheduleResponse(list.get(i),getListScheduleByIdTour(list.get(i).getId())));
+        }
+        return scheduleResponses;
     }
     public List<Schedule> getListSchedule(){
         return scheduleRepository.findAll();

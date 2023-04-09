@@ -19,7 +19,7 @@ public class Tour {
     private String id;
     private String title;
     private String subTitle;
-    private List<String> image;
+    private List<Image> image;
     private String describe;
     private String interesting;
     private String address;

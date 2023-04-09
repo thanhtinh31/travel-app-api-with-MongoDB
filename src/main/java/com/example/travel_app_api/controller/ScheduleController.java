@@ -1,6 +1,7 @@
 package com.example.travel_app_api.controller;
 
 import com.example.travel_app_api.model.Schedule;
+import com.example.travel_app_api.response.ScheduleResponse;
 import com.example.travel_app_api.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,10 @@ public class ScheduleController {
     @GetMapping("/getschedule")
     public Map<String, Object> getSchedule(@RequestParam String idSchedule){
         return scheduleService.getSchedule(idSchedule);
+    }
+    @GetMapping("/getAllschedule")
+    public List<ScheduleResponse> getAllSchedule(){
+        return scheduleService.listSchedule();
     }
 
     @PostMapping()

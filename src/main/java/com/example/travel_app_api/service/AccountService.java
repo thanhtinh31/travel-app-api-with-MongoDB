@@ -141,7 +141,6 @@ public class AccountService {
                 m.put("status","1");
                 return m;
             }
-
         }
         else{
             m.put("message","Mật khẩu không trùng khớp");
@@ -149,9 +148,6 @@ public class AccountService {
         m.put("status","0");
         return m;
     }
-
-
-
 
 
 }

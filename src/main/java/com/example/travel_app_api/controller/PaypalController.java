@@ -38,7 +38,7 @@ public class PaypalController {
     }
     @GetMapping(value = CANCEL_URL)
     public String cancelPay(){
-        return "cancel";
+        return "https://travel-app-react-ivory.vercel.app/";
     }
     @GetMapping(value = SUCCESS_URL)
     public String successPay(@RequestParam("paymentId") String paymentID,@RequestParam("PayerID") String payerID,@RequestParam("id")String id){
