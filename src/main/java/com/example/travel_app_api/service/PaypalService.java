@@ -61,14 +61,14 @@ public class PaypalService {
     public String successPayPal(Payment payment, String id){
         System.out.println(payment.getState());
         if (payment.getState().equals("approved")) {
-            System.out.println(id);
             Invoice invoice=invoiceService.getInvoiceById(id);
             invoice.setPayments("paypal");
-            invoice.setStatus(1);
+            invoice.setStatus(2);
             invoice.setPayDay(payment.getUpdateTime());
             invoice.setIdPayment(payment.getId());
             invoiceService.updateInvoice(invoiceService.updateInvoice(invoice));
-            return "Thanh toán thành công";
+            return
+                    "<HTML><body>Thanh toán thành công <a href=\"http://localhost:3000/\">Link clik to go</a></body></HTML>";
             // return payment.toJSON();
         }
         else {

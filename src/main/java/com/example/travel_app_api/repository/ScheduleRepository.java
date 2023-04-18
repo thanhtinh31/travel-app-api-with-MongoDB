@@ -20,6 +20,7 @@ public interface ScheduleRepository extends MongoRepository<Schedule, String> {
     List<Schedule> getListScheduleByTourIdActive(String idTour, Date day);
 
 
+
    // @Query(" {'dayStart': {$gt:?0}}" ) //{$or: [{ 'idTour' : ?0 }, {'dayStart': { }}]}
     @Aggregation(pipeline = {"{'$match':{'dayStart': {$gt:?0}}}","{'$sort':{'dayStart':1}}","{ $limit : 3 }"})
     List<Schedule> getListScheduleActive( Date day);

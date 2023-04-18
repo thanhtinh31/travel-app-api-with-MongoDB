@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
+import java.util.Map;
 
 @Document(collection = "tour")
 @Data
@@ -27,12 +28,13 @@ public class Tour {
     private String vehicle;
     private Double price;
     private Double sale;
+    private List<Service> services;
     private Boolean status;
    // @DBRef
     private String idAccount;
+    private List<Map<String,Object>> hanhtrinh;
     private List<String> idCategory;
 //    private List<Rating> listRating;
-//
 //    private List<Schedule> listSchedule;
 
 }

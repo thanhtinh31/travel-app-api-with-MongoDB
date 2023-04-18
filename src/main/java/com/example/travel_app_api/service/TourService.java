@@ -55,6 +55,7 @@ public class TourService {
         tour1.setSubTitle(tour.getSubTitle());
         tour1.setVehicle(tour.getVehicle());
         tour1.setIdCategory(tour.getIdCategory());
+        tour1.setHanhtrinh(tour.getHanhtrinh());
         return tourRepository.save(tour1);
     }
     public String deleteTour(String idTour){

@@ -26,17 +26,30 @@ public class InvoiceController {
     public List<Invoice> getListIncoiceByIdSchedule(@PathVariable String id){
         return invoiceService.getListInvoiceByIdSchedule(id);
     }
+    @GetMapping("/thongkebyidschedule/{id}")
+    public Map<String,Object> getThongkeByIdSchedule(@PathVariable String id){
+        return invoiceService.getThongKeByIdSchedule(id);
+    }
     @GetMapping("/account/{id}")
     public List<Invoice> getListIncoiceByIdAccount(@PathVariable String id){
         return invoiceService.getListInvoiceByIdAccount(id);
+    }
+    @GetMapping("/{status}")
+    public List<Invoice> getListIncoiceByStatus(@PathVariable String status){
+        return invoiceService.getListInvoiceByStatus(status);
     }
     @PostMapping
     public Map<String, Object> createInvoice(@RequestBody Invoice invoice){
         return invoiceService.addNewInvoice(invoice);
     }
+
     @PutMapping
     public Invoice updateInvoice(@RequestBody Invoice invoice){
         return invoiceService.updateInvoice(invoice);
+    }
+    @PutMapping("/updatestatus/{id}/{status}")
+    public Invoice updateStatus(@PathVariable String id,@PathVariable int status){
+        return invoiceService.updateStatus(id,status);
     }
 
 }

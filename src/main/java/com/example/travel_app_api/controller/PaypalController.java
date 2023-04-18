@@ -22,7 +22,7 @@ public class PaypalController {
     @PostMapping("/paypal")
     public String payment(@RequestBody Invoice invoice){
         try {
-            Payment payment= service.createPayment(invoice.getAmount(),"USD",
+            Payment payment= service.createPayment(invoice.getAmount()/25000,"USD",
                     "paypal","sale",invoice.getNote(),
                     "http://localhost:8080/pay/"+CANCEL_URL
                     ,"http://localhost:8080/pay/"+SUCCESS_URL+"?id="+invoice.getId());

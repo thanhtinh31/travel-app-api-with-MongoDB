@@ -1,6 +1,7 @@
 package com.example.travel_app_api.controller;
 
 import com.example.travel_app_api.model.Schedule;
+import com.example.travel_app_api.model.Tour;
 import com.example.travel_app_api.response.ScheduleResponse;
 import com.example.travel_app_api.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +29,21 @@ public class ScheduleController {
     public List<Schedule> getListScheduleActiveById(@PathVariable String idTour){
         return scheduleService.getListScheduleByIdTourActive(idTour);
     }
+    @GetMapping("/{status}/{idTour}")
+    public List<Schedule> getListScheduleActiveById(@PathVariable String idTour,@PathVariable String status){
+        return scheduleService.getListScheduleByIdTourStatus(idTour,status);
+    }
     @GetMapping("/all/active")
     public List<Schedule> getListScheduleActive(){
         return scheduleService.getListScheduleActive();
     }
-    @GetMapping("/getschedule")
-    public Map<String, Object> getSchedule(@RequestParam String idSchedule){
-        return scheduleService.getSchedule(idSchedule);
+    @GetMapping("/gettour/{id}")
+    public Tour getTour(@PathVariable String id){
+        return scheduleService.getTour(id);
+    }
+    @GetMapping("/getschedule/{id}")
+    public Schedule getSchedule(@PathVariable String id){
+        return scheduleService.getSchedule(id);
     }
     @GetMapping("/getAllschedule")
     public List<ScheduleResponse> getAllSchedule(){

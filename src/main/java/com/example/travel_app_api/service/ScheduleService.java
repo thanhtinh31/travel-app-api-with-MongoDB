@@ -42,6 +42,14 @@ public class ScheduleService {
         Date date = new java.sql.Date(millis);
         return scheduleRepository.getListScheduleByTourIdActive(idTour,date);
     }
+    public List<Schedule> getListScheduleByIdTourStatus(String idTour,String status){
+        long millis = System.currentTimeMillis();
+        Date date = new java.sql.Date(millis);
+        if(status.equals("0")){
+        return scheduleRepository.getListScheduleByTourIdActive(idTour,date);}
+        else return scheduleRepository.getListScheduleByTourIdPass(idTour,date);
+    }
+
     public List<Schedule> getListScheduleActive(){
         long millis = System.currentTimeMillis();
         Date date = new java.sql.Date(millis);
@@ -49,13 +57,15 @@ public class ScheduleService {
 
         return list;
     }
-    public Map<String,Object> getSchedule(String id){
-        Map<String,Object> m=new HashMap<>();
+    public Tour getTour(String id){
         Schedule schedule =scheduleRepository.findById(id).get();
         Tour tour=tourRepository.findById(schedule.getIdTour()).get();
-        m.put("tour",tour);
-        m.put("schedule",schedule);
-        return m;
+        return tour;
+
+    }
+    public Schedule getSchedule(String id){
+        Schedule schedule =scheduleRepository.findById(id).get();
+        return schedule;
 
     }
 
