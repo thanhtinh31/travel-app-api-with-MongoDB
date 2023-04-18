@@ -10,6 +10,7 @@ public class EmailSenderService {
     @Autowired
     private JavaMailSender javaMailSender;
     public void sendMail(String toEmail,String subject,String body){
+
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("travel-app");
         message.setTo(toEmail);
