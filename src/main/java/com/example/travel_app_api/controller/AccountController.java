@@ -38,7 +38,7 @@ public class AccountController {
     }
     @GetMapping("/{email}")
     public int getAccountByEmail(@PathVariable String email){
-        return accountService.verify(email);
+        return accountService.verify(email,"");
     }
     @PostMapping("/register")
     public Map<String,Object> register(@RequestBody Account account){

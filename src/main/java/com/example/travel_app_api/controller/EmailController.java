@@ -21,4 +21,9 @@ public class EmailController {
         emailSenderService.sendMail(mailRequest.getToEmail(),mailRequest.getSubject(),mailRequest.getBody());
         return "sent";
     }
+    @PostMapping("/html")
+    public String sendMailHtml(@RequestBody MailRequest mailRequest){
+        emailSenderService.sendMailHtml(mailRequest.getToEmail(),mailRequest.getSubject(),mailRequest.getBody());
+        return "sent";
+    }
 }
