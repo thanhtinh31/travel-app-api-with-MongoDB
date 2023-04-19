@@ -21,6 +21,15 @@ public class TourService {
         if(page<=0) page=1;
         return tourRepository.findAll(PageRequest.of(page-1,size, Sort.by(sort).descending()));
     };
+    public List<Tour> getAllTour(){
+        return tourRepository.findAll();
+    };
+    public List<Tour> getTourActive(){
+        return tourRepository.getListTourActive();
+    };
+    public List<Tour> getTourHomeActive(){
+        return tourRepository.getListTourHomeActive();
+    };
     public Map<String,Object> addTour(Tour tour) {
         Map<String, Object> m = new HashMap<>();
         if (tour.getIdAccount() == null) {

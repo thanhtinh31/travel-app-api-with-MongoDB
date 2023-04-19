@@ -39,7 +39,6 @@ public class AccountService {
 
             }else{
                 m.put("message","Tài khoản đã bị khóa");
-
             }
         }
         else{
@@ -58,12 +57,18 @@ public class AccountService {
             account1.setImage(account.getImage());
             account1.setNameAccount(account.getNameAccount());
             accountRepository.save(account1);
-            m.put("account",accountRepository.getAccountByIDFacebook(account.getIdFacebook()));
+            if(account1.isStatus()==false){
+                m.put("status","0");
+                m.put("message","Tài khoản đã bị khóa");
+            }else {
+                m.put("account", accountRepository.getAccountByIDFacebook(account.getIdFacebook()));
+                m.put("status","1");
+            }
         }
         else{
-
             accountRepository.save(account);
-            m.put("message","Tai khoan moi");
+            m.put("message","Tài khoản mới");
+            m.put("status","1");
             m.put("account",account);
         }
         return m;
@@ -220,7 +225,7 @@ public class AccountService {
                 "                      <td align=\"center\" style=\"padding:0;Margin:0;font-size:0px\"><img class=\"adapt-img\" src=\"https://youmatter.world/app/uploads/sites/2/2019/11/travel-world.jpg\" alt style=\"display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic\" width=\"600\"></td>\n" +
                 "                     </tr>\n" +
                 "                     <tr style=\"border-collapse:collapse\">\n" +
-                "                      <td align=\"center\" style=\"Margin:0;padding-top:10px;padding-bottom:15px;padding-left:20px;padding-right:20px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:'comic sans ms', 'marker felt-thin', arial, sans-serif;line-height:27px;color:#000000;font-size:18px\">Nếu như bạn có bất kỳ câu hỏi nào hoặc không thực hiện yêu cầu này có thể bỏ qua hoặc liên hệ với chúng tôi qua địa chỉ email:&nbsp;<em><strong><a href=\"mailto:hotelhimara@gmail.com\" target=\"_blank\" style=\"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:none;color:#ff0000;font-size:16px\">thanhtinhtrinhtk123@gmail.com</a></strong></em><br>Đây là địa chỉ email tự động, vui lòng không trả lời qua email này!.</p></td>\n" +
+                "                      <td align=\"center\" style=\"Margin:0;padding-top:10px;padding-bottom:15px;padding-left:20px;padding-right:20px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:'comic sans ms', 'marker felt-thin', arial, sans-serif;line-height:27px;color:#000000;font-size:18px\">Nếu như bạn có bất kỳ câu hỏi nào hoặc không thực hiện yêu cầu này có thể bỏ qua hoặc liên hệ với chúng tôi qua địa chỉ email:&nbsp;<em><strong><a href=\"mailto:thanhtinhtrinhtk123@gmail.com\" target=\"_blank\" style=\"-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:none;color:#ff0000;font-size:16px\">thanhtinhtrinhtk123@gmail.com</a></strong></em><br>Đây là địa chỉ email tự động, vui lòng không trả lời qua email này!.</p></td>\n" +
                 "                     </tr>\n" +
                 "                     <tr style=\"border-collapse:collapse\">\n" +
                 "                      <td align=\"right\" style=\"Margin:0;padding-top:10px;padding-bottom:15px;padding-left:20px;padding-right:20px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:'comic sans ms', 'marker felt-thin', arial, sans-serif;line-height:27px;color:#000000;font-size:18px\"><em><strong>TRAVEL APP VERIFY</strong></em></p></td>\n" +
@@ -290,6 +295,18 @@ public class AccountService {
             m.put("status","0");
         }
         return m;
+    }
+    public String changeStatus(Account account){
+       Account account1=getAccountById(account.getId());
+       account1.setStatus(account.isStatus());
+       accountRepository.save(account1);
+       return "thanh cong";
+    }
+    public String changeTypeAccount(Account account){
+        Account account1=getAccountById(account.getId());
+        account1.setTypeAccount(account.getTypeAccount());
+        accountRepository.save(account1);
+        return "thanh cong";
     }
     public Map<String,Object> changePassword(String email,String oldPass,String newPass){
         Map<String,Object> m=new HashMap<>();

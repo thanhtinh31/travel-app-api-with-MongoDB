@@ -28,6 +28,14 @@ public class CategoryController {
     public Map<String, Object> addCategory(@RequestBody Category category){
         return categoryService.addCategory(category);
     }
+    @GetMapping("/active")
+    private List<Category> active(){
+        return categoryService.getListCategoryActive();
+    }
+    @GetMapping("/home")
+    public List<Category> getTourHomeActive(){
+        return  categoryService.getCategoryHome();
+    }
     @GetMapping("/search")
     private List<Category> search(@RequestParam(name="key",required = false,defaultValue = "") String key){
         return categoryService.searchCategory(key);

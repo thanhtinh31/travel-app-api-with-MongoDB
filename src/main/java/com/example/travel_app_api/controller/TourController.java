@@ -29,6 +29,18 @@ public class TourController {
     public Tour getTourById(@PathVariable String id){
         return  tourService.getTourById(id);
     }
+    @GetMapping("/active")
+    public List<Tour> getTourActive(){
+        return  tourService.getTourActive();
+    }
+    @GetMapping("/homeactive")
+    public List<Tour> getTourHomeActive(){
+        return  tourService.getTourHomeActive();
+    }
+    @GetMapping("/all")
+    public List<Tour> getAllTOur(){
+        return  tourService.getAllTour();
+    }
     @GetMapping("/gettourbycategory")
     public List<Tour> getListTourByCategory(@RequestParam(name = "category") String id ){
         return tourService.getTourByCategory(id);

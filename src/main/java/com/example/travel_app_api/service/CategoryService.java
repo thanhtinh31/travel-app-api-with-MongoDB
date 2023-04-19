@@ -1,6 +1,7 @@
 package com.example.travel_app_api.service;
 
 import com.example.travel_app_api.model.Category;
+import com.example.travel_app_api.model.Tour;
 import com.example.travel_app_api.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,13 +23,18 @@ public class CategoryService {
         if(page<=0) page=1;
         return categoryRepository.findAll(PageRequest.of(page-1,size,Sort.by(sort).descending()));
     };
+    public List<Category> getListCategoryActive(){
+        return categoryRepository.getListCategoryActive();
+    }
+    public List<Category> getCategoryHome(){
+        return categoryRepository.getListCategoryHome();
+    };
     public Category findById(String id){
         try {
             return categoryRepository.findById(id).get();
         }catch (Exception e){
             return null;
         }
-
     }
     public List<Category> searchCategory(String key){
         return categoryRepository.searchCategory(key);

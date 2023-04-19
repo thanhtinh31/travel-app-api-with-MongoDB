@@ -53,5 +53,13 @@ public class AccountController {
     public Map<String,Object> changPassword(@RequestBody ChangePasswordRequest changePasswordRequest){
         return accountService.changePassword(changePasswordRequest.getEmail(),changePasswordRequest.getOldPass(),changePasswordRequest.getNewPass());
     }
+    @PostMapping("/changestatus")
+    public String changeStatus(@RequestBody Account account){
+        return accountService.changeStatus(account);
+    }
+    @PostMapping("/changetypeaccount")
+    public String changeTypeAccount(@RequestBody Account account){
+        return accountService.changeTypeAccount(account);
+    }
 
 }
