@@ -6,6 +6,8 @@ import com.google.firebase.auth.hash.Bcrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +30,12 @@ public class AccountService {
         if(account!=null){
             if(account.isStatus()){
                 if(accountRepository.login(email,password)!=null){
-                    m.put("account",accountRepository.login(email,password));
+                    Account account1=accountRepository.login(email,password);
+                    LocalDateTime now=LocalDateTime.now();
+
+                    account1.setTimeLogin(now);
+                    accountRepository.save(account1);
+                    m.put("account",account1);
                     m.put("message","Đăng nhập thành công");
                     m.put("status","1");
                     return m;
@@ -61,8 +68,13 @@ public class AccountService {
                 m.put("status","0");
                 m.put("message","Tài khoản đã bị khóa");
             }else {
-                m.put("account", accountRepository.getAccountByIDFacebook(account.getIdFacebook()));
+                Account account2=accountRepository.getAccountByIDFacebook(account.getIdFacebook());
+                LocalDateTime now=LocalDateTime.now();
+                account2.setTimeLogin(now);
+                accountRepository.save(account2);
+                m.put("account",account2 );
                 m.put("status","1");
+
             }
         }
         else{

@@ -23,6 +23,12 @@ public class AccountController {
         List<Account> accounts= accountService.listAcount();
         return accounts;
     }
+    @GetMapping("/getAccount/{id}")
+    public Account getAccountById(@PathVariable String id){
+
+        return accountService.getAccountById(id);
+    }
+
     @GetMapping("/active")
     public List<Account> getAccountActive(){
         return accountService.getActive();
