@@ -58,8 +58,8 @@ public class ScheduleController {
     public Map<String,Object> updateSchedule(@RequestBody Schedule schedule){
             return scheduleService.updateSchedule(schedule);
     }
-    @DeleteMapping
-    public String daleteSchedule(@RequestParam(defaultValue = "") String id){
+    @DeleteMapping("/{id}")
+    public Map<String, Object> daleteSchedule(@PathVariable String id){
         return scheduleService.deleteSchedule(id);
     }
 

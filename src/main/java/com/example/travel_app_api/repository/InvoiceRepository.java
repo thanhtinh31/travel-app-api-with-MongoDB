@@ -15,7 +15,6 @@ public interface InvoiceRepository extends MongoRepository<Invoice,String> {
     List<Invoice> getListInvoiceByIdAccount(String idAccount);
     @Aggregation(pipeline = {"{'$match':{'status': ?0}}","{'$sort':{'dateInvoice':-1}}"})
     List<Invoice> getListInvoiceByStatus(int status);
-
     @Aggregation(pipeline = {"{'$match':{'idAccount': ?0}}","{'$match':{'status': ?1}}","{'$sort':{'dateInvoice':-1}}"})
     List<Invoice> getListInvoiceByIdAccountStatus(String id,int status);
 }

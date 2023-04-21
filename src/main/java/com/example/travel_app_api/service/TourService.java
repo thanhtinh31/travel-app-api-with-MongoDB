@@ -38,7 +38,6 @@ public class TourService {
             else return tourRepository.filterNoAddress(filterTour.getIdCategory(),filterTour.getGt(),filterTour.getLt(),filterTour.getSort());
         }else if(filterTour.getIdCategory()==null) return tourRepository.filterNoCategory(filterTour.getAddress(),filterTour.getGt(),filterTour.getLt(),filterTour.getSort());
         else return tourRepository.filter(filterTour.getAddress(),filterTour.getIdCategory(),filterTour.getGt(),filterTour.getLt(),filterTour.getSort());
-
     };
     public Map<String,Object> addTour(Tour tour) {
         Map<String, Object> m = new HashMap<>();
