@@ -24,4 +24,14 @@ public interface TourRepository extends MongoRepository<Tour,String> {
 
     @Aggregation(pipeline = {"{'$match':{'status': true}}","{ $limit : 6 }"})
     List<Tour> getListTourHomeActive();
+    @Aggregation(pipeline = {"{'$match':{ $text: { $search: ?0 } }}","{'$match':{'idCategory':{$in:?1}}}", "{'$match':{'price':{$gt:?2}}}","{'$match':{'price':{$lt:?3}}}","{'$sort':{'price':?4}}"})
+    List<Tour> filter(String address,List<String> idCategory,double gt,double lt,int sort);
+
+    @Aggregation(pipeline = {"{'$match':{'idCategory':{$in:?0}}}", "{'$match':{'price':{$gt:?1}}}","{'$match':{'price':{$lt:?2}}}","{'$sort':{'price':?3}}"})
+    List<Tour> filterNoAddress(List<String> idCategory,double gt,double lt,int sort);
+    @Aggregation(pipeline = {"{'$match':{ $text: { $search: ?0 } }}", "{'$match':{'price':{$gt:?1}}}","{'$match':{'price':{$lt:?2}}}","{'$sort':{'price':?3}}"})
+    List<Tour> filterNoCategory(String address,double gt,double lt,int sort);
+    @Aggregation(pipeline = {"{'$match':{'price':{$gt:?0}}}","{'$match':{'price':{$lt:?1}}}","{'$sort':{'price':?2}}"})
+    List<Tour> filterNoAddressNoCategory(double gt,double lt,int sort);
+
 }

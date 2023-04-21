@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Document(collection = "category")
@@ -16,13 +17,10 @@ import java.util.List;
 public class Category {
     @Id
     private String id;
-
     private String name;
     private String content;
-
     private String image;
-
     private boolean status;
-
+    private LocalDateTime timeUpdate;
 
 }

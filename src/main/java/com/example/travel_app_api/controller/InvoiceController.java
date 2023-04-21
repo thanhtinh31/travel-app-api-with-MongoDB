@@ -34,6 +34,10 @@ public class InvoiceController {
     public List<Invoice> getListIncoiceByIdAccount(@PathVariable String id){
         return invoiceService.getListInvoiceByIdAccount(id);
     }
+    @GetMapping("/idstatus/{id}/{status}")
+    public List<Invoice> getListIncoiceByIdAccountStatus(@PathVariable String id,@PathVariable int status){
+        return invoiceService.getListInvoiceByIdAccountStatus(id,status);
+    }
     @GetMapping("/{status}")
     public List<Invoice> getListIncoiceByStatus(@PathVariable String status){
         return invoiceService.getListInvoiceByStatus(status);

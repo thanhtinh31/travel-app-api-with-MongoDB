@@ -27,6 +27,9 @@ public class InvoiceService {
     public List<Invoice> getListInvoiceByIdAccount(String idAccount){
         return invoiceRepository.getListInvoiceByIdAccount(idAccount);
     }
+    public List<Invoice> getListInvoiceByIdAccountStatus(String id,int status){
+        return invoiceRepository.getListInvoiceByIdAccountStatus(id,status);
+    }
     public Map<String,Object> getThongKeByIdSchedule(String idSchedule){
         Map<String,Object> m=new HashMap<>();
         List<Invoice> list=invoiceRepository.getListInvoiceByIdSchedule(idSchedule);

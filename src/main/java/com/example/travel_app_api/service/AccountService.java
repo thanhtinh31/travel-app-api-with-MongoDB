@@ -32,7 +32,6 @@ public class AccountService {
                 if(accountRepository.login(email,password)!=null){
                     Account account1=accountRepository.login(email,password);
                     LocalDateTime now=LocalDateTime.now();
-
                     account1.setTimeLogin(now);
                     accountRepository.save(account1);
                     m.put("account",account1);

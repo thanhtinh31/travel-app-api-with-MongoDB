@@ -3,6 +3,7 @@ package com.example.travel_app_api.controller;
 import com.example.travel_app_api.model.Account;
 import com.example.travel_app_api.model.Category;
 import com.example.travel_app_api.model.Tour;
+import com.example.travel_app_api.request.FilterTour;
 import com.example.travel_app_api.service.AccountService;
 import com.example.travel_app_api.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,11 @@ public class TourController {
     @GetMapping("/search")
     private List<Tour> search(@RequestParam(name="key",required = false,defaultValue = "") String key){
         return tourService.searchTour(key);
+    }
+    @PostMapping("/filter")
+    private List<Tour> search(@RequestBody FilterTour filterTour){
+        return tourService.
+                getTourFilter(filterTour);
     }
 
     @PostMapping

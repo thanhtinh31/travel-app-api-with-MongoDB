@@ -1,12 +1,14 @@
 package com.example.travel_app_api.service;
 import com.example.travel_app_api.model.Tour;
 import com.example.travel_app_api.repository.TourRepository;
+import com.example.travel_app_api.request.FilterTour;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,14 +32,24 @@ public class TourService {
     public List<Tour> getTourHomeActive(){
         return tourRepository.getListTourHomeActive();
     };
+    public List<Tour> getTourFilter(FilterTour filterTour){
+        if(filterTour.getAddress()==null){
+            if(filterTour.getIdCategory()==null) return tourRepository.filterNoAddressNoCategory(filterTour.getGt(),filterTour.getLt(),filterTour.getSort());
+            else return tourRepository.filterNoAddress(filterTour.getIdCategory(),filterTour.getGt(),filterTour.getLt(),filterTour.getSort());
+        }else if(filterTour.getIdCategory()==null) return tourRepository.filterNoCategory(filterTour.getAddress(),filterTour.getGt(),filterTour.getLt(),filterTour.getSort());
+        else return tourRepository.filter(filterTour.getAddress(),filterTour.getIdCategory(),filterTour.getGt(),filterTour.getLt(),filterTour.getSort());
+
+    };
     public Map<String,Object> addTour(Tour tour) {
         Map<String, Object> m = new HashMap<>();
         if (tour.getIdAccount() == null) {
-            m.put("message", "Khong thanh cong");
+            m.put("message", "Không thành công");
             m.put("status", "0");
         } else {
+            LocalDateTime now=LocalDateTime.now();
+            tour.setTimeUpdate(now);
             tourRepository.save(tour);
-            m.put("message", "Them moi tour thanh cong");
+            m.put("message", "Thêm mới tour thành công");
             m.put("status", "1");
             m.put("tour", tour);
         }
@@ -50,6 +62,7 @@ public class TourService {
         return tourRepository.getListTourByCategory(idCategory);
     }
     public Tour updateTour(Tour tour){
+        LocalDateTime now=LocalDateTime.now();
         Tour tour1=tourRepository.findById(tour.getId()).get();
         tour1.setTitle(tour.getTitle());
         tour1.setImage(tour.getImage());
@@ -65,6 +78,7 @@ public class TourService {
         tour1.setVehicle(tour.getVehicle());
         tour1.setIdCategory(tour.getIdCategory());
         tour1.setHanhtrinh(tour.getHanhtrinh());
+        tour1.setTimeUpdate(now);
         return tourRepository.save(tour1);
     }
     public String deleteTour(String idTour){

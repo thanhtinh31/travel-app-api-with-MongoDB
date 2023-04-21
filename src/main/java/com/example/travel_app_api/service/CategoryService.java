@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,8 @@ public class CategoryService {
     public Map<String,Object> addCategory(Category category){
         Map<String,Object> m=new HashMap<>();
         if(categoryRepository.findByName(category.getName())==null){
+            LocalDateTime now=LocalDateTime.now();
+            category.setTimeUpdate(now);
             categoryRepository.save(category);
             m.put("message","Thêm mới thành công");
             m.put("status","1");
@@ -54,11 +57,13 @@ public class CategoryService {
         return m;
     }
     public Category updateCategory(Category category){
+        LocalDateTime now=LocalDateTime.now();
         Category category1=categoryRepository.findById(category.getId()).get();
         category1.setName(category.getName());
         category1.setContent(category.getContent());
         category1.setImage(category.getImage());
         category1.setStatus(category.isStatus());
+        category1.setTimeUpdate(now);
         return categoryRepository.save(category1);
 
     }
