@@ -55,5 +55,22 @@ public class InvoiceController {
     public Invoice updateStatus(@PathVariable String id,@PathVariable int status){
         return invoiceService.updateStatus(id,status);
     }
+    @PutMapping("/xacnhan/{id}")
+    public String xacnhan(@PathVariable String id){
+        return invoiceService.xacNhanHoaDon(id);
+    }
+    @PutMapping("/huy/{id}")
+    public String xacnhan(@PathVariable String id,@RequestParam String lyDo){
+        return invoiceService.huyHoaDon(id,lyDo);
+    }
+    @PutMapping("/thanhtoan/{id}")
+    public String thanhtoan(@PathVariable String id,@RequestParam String nhanVien){
+        return invoiceService.thanhToan(id,nhanVien);
+    }
+    @DeleteMapping("/{id}")
+    public String xoahoadon(@PathVariable String id){
+        return invoiceService.xoaHoaDon(id);
+    }
+
 
 }

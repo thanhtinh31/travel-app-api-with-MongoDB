@@ -18,6 +18,8 @@ public class PaypalService {
     private APIContext apiContext;
     @Autowired
     private  InvoiceService invoiceService;
+    @Autowired
+    EmailSenderService emailSenderService;
 
     public Payment createPayment(
             Double total,
@@ -67,6 +69,19 @@ public class PaypalService {
             invoice.setPayDay(payment.getUpdateTime());
             invoice.setIdPayment(payment.getId());
             invoiceService.updateInvoice(invoiceService.updateInvoice(invoice));
+            String name=payment.getPayer().getPayerInfo().getFirstName()+payment.getPayer().getPayerInfo().getLastName();
+            String emailThanhtoan=payment.getPayer().getPayerInfo().getEmail();
+            emailSenderService.sendMailHtml(invoice.getEmail(),"Giao dịch thành công","<h2>Thanh toán hóa đơn thành công</h2><br/>" +
+                    "Mã hóa đơn:"+invoice.getId()+"<br/>" +
+                    "Người đặt:"+invoice.getFullName()+"<br/>" +
+                    "Địa chỉ:"+invoice.getAddress()+"<br/>" +
+                    "Ngày lập hóa đơn:"+invoice.getDateInvoice()+"<br/>" +
+                    "Ngày thanh toán:"+invoice.getPayDay()+"<br/>" +
+                    "Hình thức thanh toán:"+invoice.getPayments()+"<br/>" +
+                    "Tên tài khoản thanh toán:"+name+"<br/>" +
+                    "Email tài khoản:"+emailThanhtoan+"<br/>" +
+                    "Số tiền thanh toán:"+invoice.getAmount()+" vnđ <br/>" +
+                    "<h3>Chúc bạn có một chuyến đi vui vẻ</h3>");
             return
                     "<HTML><body>Thanh toán thành công <a href=\"http://localhost:3000/\">Link clik to go</a></body></HTML>";
             // return payment.toJSON();

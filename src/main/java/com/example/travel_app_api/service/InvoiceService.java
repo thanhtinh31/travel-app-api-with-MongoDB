@@ -2,10 +2,15 @@ package com.example.travel_app_api.service;
 
 import com.example.travel_app_api.model.Invoice;
 import com.example.travel_app_api.model.Schedule;
+import com.example.travel_app_api.model.Tour;
 import com.example.travel_app_api.repository.InvoiceRepository;
+import com.example.travel_app_api.response.CountInvoice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +23,8 @@ public class InvoiceService {
     private ScheduleService scheduleService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private  EmailSenderService emailSenderService;
     public List<Invoice> getListInvoice(){
         return invoiceRepository.findAll();
     }
@@ -110,6 +117,48 @@ public class InvoiceService {
     public List<Invoice> getListInvoiceByStatus(String status){
         int stt=Integer.parseInt(status);
         return invoiceRepository.getListInvoiceByStatus(stt);
+    }
+    public List<Invoice> getListInvoiceByYear(String year){
+        LocalDate dayfrom = LocalDate.parse("01/01/"+year,
+                DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+        LocalDate dayto = LocalDate.parse("12/31/"+year,
+                DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+        return invoiceRepository.getListInvoiceByYear(dayfrom,dayto);
+    }
+    public List<CountInvoice> countInvoiceByIdSchedule(){
+        return invoiceRepository.countInvoiceByIdSchedule();
+    }
+
+    public String xacNhanHoaDon(String id){
+        Invoice invoice=invoiceRepository.findById(id).get();
+        invoice.setStatus(1);
+        invoiceRepository.save(invoice);
+      //  emailSenderService.sendMailHtml(invoice.getEmail(),"Thông báo hóa đơn","Xac nhan hoa don thanh cong, Vui long thanh toan");
+        return "Xác nhân thành công";
+    }
+    public String huyHoaDon(String id,String lyDo){
+        Invoice invoice=invoiceRepository.findById(id).get();
+        invoice.setStatus(3);
+        invoiceRepository.save(invoice);
+        emailSenderService.sendMailHtml(invoice.getEmail(),"Thông báo hóa đơn","Tour cua ban da bi huy vi "+lyDo);
+        return "Hủy thành công";
+    }
+    public String thanhToan(String id,String nhanVien){
+        LocalDate date=LocalDate.now();
+        Invoice invoice=invoiceRepository.findById(id).get();
+        invoice.setStatus(2);
+        invoice.setPayDay(date.toString());
+        invoice.setPayments("Tại cửa hàng");
+        invoice.setNhanVien(nhanVien);
+        invoiceRepository.save(invoice);
+        emailSenderService.sendMailHtml(invoice.getEmail(),"Thông báo hóa đơn","Thanh toán thành công nhân viên "+nhanVien);
+        return "Thanh toán thành công";
+    }
+    public String xoaHoaDon(String id){
+        Invoice invoice=invoiceRepository.findById(id).get();
+        if(invoice.getStatus()!=3) return "Xóa không thành công";
+        else invoiceRepository.delete(invoice);
+        return "Xóa thành công";
     }
 
 

@@ -24,7 +24,7 @@ public class TourService {
         return tourRepository.findAll(PageRequest.of(page-1,size, Sort.by(sort).descending()));
     };
     public List<Tour> getAllTour(){
-        return tourRepository.findAll();
+        return tourRepository.getAllTour();
     };
     public List<Tour> getTourActive(){
         return tourRepository.getListTourActive();
@@ -77,6 +77,7 @@ public class TourService {
         tour1.setVehicle(tour.getVehicle());
         tour1.setIdCategory(tour.getIdCategory());
         tour1.setHanhtrinh(tour.getHanhtrinh());
+        tour1.setIdService(tour.getIdService());
         tour1.setTimeUpdate(now);
         return tourRepository.save(tour1);
     }
@@ -92,5 +93,13 @@ public class TourService {
     public List<Tour> searchTour(String key){
         return tourRepository.searchTour(key);
     }
+    public int countTour(){
+        return tourRepository.findAll().size();
+    }
+    public Map<String,Object> countByIdCategory(String id){
+        return tourRepository.countByIdCategory(id);
+    }
+
+
 
 }

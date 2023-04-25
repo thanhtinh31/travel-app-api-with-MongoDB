@@ -1,6 +1,7 @@
 package com.example.travel_app_api.controller;
 
 import com.example.travel_app_api.model.Invoice;
+import com.example.travel_app_api.service.EmailSenderService;
 import com.example.travel_app_api.service.InvoiceService;
 import com.example.travel_app_api.service.PaypalService;
 import com.paypal.api.payments.Links;
@@ -17,6 +18,7 @@ public class PaypalController {
     PaypalService service;
     @Autowired
     InvoiceService invoiceService;
+
     public static final String SUCCESS_URL="paypal/success";
     public static final String CANCEL_URL="paypal/cancel";
     @PostMapping("/paypal")
@@ -38,6 +40,7 @@ public class PaypalController {
     }
     @GetMapping(value = CANCEL_URL)
     public String cancelPay(){
+
         return "https://travel-app-react-ivory.vercel.app/";
     }
     @GetMapping(value = SUCCESS_URL)

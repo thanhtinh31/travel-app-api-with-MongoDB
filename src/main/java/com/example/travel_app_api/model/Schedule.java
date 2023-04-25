@@ -21,5 +21,6 @@ public class Schedule {
     private int maxPeople;
     private int daDat;
     private String idTour;
+    private boolean status;
 
 }

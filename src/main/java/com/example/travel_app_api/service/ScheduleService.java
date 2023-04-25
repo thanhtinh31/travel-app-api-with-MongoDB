@@ -1,11 +1,12 @@
 package com.example.travel_app_api.service;
 
+import com.example.travel_app_api.model.Invoice;
 import com.example.travel_app_api.model.Schedule;
 import com.example.travel_app_api.model.Tour;
 import com.example.travel_app_api.repository.InvoiceRepository;
 import com.example.travel_app_api.repository.ScheduleRepository;
 import com.example.travel_app_api.repository.TourRepository;
-import com.example.travel_app_api.response.ScheduleResponse;
+import com.example.travel_app_api.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class ScheduleService {
     private TourRepository tourRepository;
     @Autowired
     InvoiceRepository invoiceRepository;
+
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
     public List<Schedule> getListScheduleByIdTour(String idTour){
         return scheduleRepository.getListScheduleByTourId(idTour);
@@ -49,7 +52,7 @@ public class ScheduleService {
         long millis = System.currentTimeMillis();
         Date date = new java.sql.Date(millis);
         if(status.equals("0")){
-        return scheduleRepository.getListScheduleByTourIdActive(idTour,date);}
+        return scheduleRepository.getListScheduleByTourIdActiveSeller(idTour,date);}
         else return scheduleRepository.getListScheduleByTourIdPass(idTour,date);
     }
     public List<Schedule> getListScheduleActive(){
@@ -111,6 +114,7 @@ public class ScheduleService {
             schedule1.setPhone(schedule.getPhone());
             schedule1.setTourGuide(schedule.getTourGuide());
             schedule1.setAddressStart(schedule.getAddressStart());
+            schedule1.setStatus(schedule.isStatus());
 
             scheduleRepository.save(schedule1);
             m.put("message","Cập nhật lịch trình thành công");
@@ -144,7 +148,85 @@ public class ScheduleService {
         return m;
     }
 
+    public List<Tour> filterSchedule(String addressStart,String from,String to){
+        LocalDate dayfrom = LocalDate.parse(from,
+                DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+        LocalDate dayto = LocalDate.parse(to,
+                DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+        List<Tour> list = new ArrayList<>();
+        List<Schedule> schedules=null;
+        if(addressStart==null||addressStart.equals("")){
+            schedules=scheduleRepository.filterNoAddress(dayfrom,dayto);
+        }
+        else{
+            schedules=scheduleRepository.filter(addressStart,dayfrom,dayto);
+        }
+        for (int i=0;i<schedules.size();i++){
+            list.add(tourRepository.findById(schedules.get(i).getIdTour()).get());
+        }
+        return list;
+    }
 
+    public List<TopTour> thongkehoadon(){
+        List<CountInvoice> list=invoiceRepository.countInvoiceByIdSchedule();
+        for (int i=0;i<list.size();i++){
+            Schedule schedule=getSchedule(list.get(i).getId());
+            list.get(i).setIdTour(schedule.getIdTour());
+        }
+        List<TopTour> topTours=new ArrayList<>();
+        List<Tour> tourList =tourRepository.findAll();
+        for (int i=0;i<tourList.size();i++){
+            int c=0;
+            for (int j=0;j<list.size();j++){
+                if(list.get(j).getIdTour().equals(tourList.get(i).getId())) c=c+list.get(j).getCount();
+            }
+            TopTour topTour=new TopTour(tourList.get(i).getId(),c,tourList.get(i).getTitle());
+            topTours.add(topTour);
+        }
+        return topTours;
+    }
+    public Map<String,Object> getDetaiPeopleSchedule(String idSchedule){
+        Map<String,Object> m=new HashMap<>();
+        List<Invoice> invoices=invoiceRepository.getListInvoiceByIdSchedule(idSchedule);
+        int dachot=0,chuachot=0,dahuy=0;
+        for(int i=0;i<invoices.size();i++){
+            if(invoices.get(i).getStatus()==2) dachot=dachot+invoices.get(i).getPeople();
+            else if(invoices.get(i).getStatus()==1) chuachot=chuachot+invoices.get(i).getPeople();
+            else if(invoices.get(i).getStatus()==3) dahuy=dahuy+invoices.get(i).getPeople();
+        }
+        m.put("dachot",dachot);
+        m.put("chuachot",chuachot);
+        m.put("dahuy",dahuy);
+        return m;
+    }
+    public List<Schedule> quanLyChotTour(String loai){
+        List<DetailSchedule> list=new ArrayList<>();
+        long millis = System.currentTimeMillis();
+        Date date = new java.sql.Date(millis);
+        List<Schedule> schedules;
+        if(loai.equals("dachot")) schedules=scheduleRepository.getListScheduleDaChotChuaDi(date);
+        else if(loai.equals("chuachot")) schedules=scheduleRepository.getListScheduleChuaChot(date);
+        else schedules=scheduleRepository.getListScheduleDaChotDaHoanThanh(date);
+        System.out.println(schedules.size());
+//        for (int i=0;i<schedules.size();i++){
+//            DetailSchedule m=new DetailSchedule();
+//            m.setTitle(tourRepository.findById(schedules.get(i).getIdTour()).get().getTitle());
+//            m.setAddress(tourRepository.findById(schedules.get(i).getIdTour()).get().getAddress());
+//            m.setPhone(schedules.get(i).getPhone());
+//            m.setTourGuide(schedules.get(i).getTourGuide());
+//            m.setDayStart(schedules.get(i).getDayStart());
+//            m.setPeople(getDetaiPeopleSchedule(schedules.get(i).getId()));
+//            m.setIdSchedule(schedules.get(i).getId());
+//            list.add(m);
+//        }
+        return schedules;
+    }
 
+    public String changeStatus(String idSchedule,Boolean status){
+        Schedule schedule=getSchedule(idSchedule);
+        schedule.setStatus(status);
+        scheduleRepository.save(schedule);
+        return "Thay đổi thành công";
+    }
 
 }

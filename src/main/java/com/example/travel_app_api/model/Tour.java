@@ -29,13 +29,10 @@ public class Tour {
     private String vehicle;
     private Double price;
     private Double sale;
-    private List<Service> services;
     private Boolean status;
-   // @DBRef
     private String idAccount;
     private List<Map<String,Object>> hanhtrinh;
     private List<String> idCategory;
-//    private List<Rating> listRating;
-//    private List<Schedule> listSchedule;
+    private List<String> idService;
     private LocalDateTime timeUpdate;
 }

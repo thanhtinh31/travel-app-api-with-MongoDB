@@ -11,13 +11,16 @@ import java.text.DateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface ScheduleRepository extends MongoRepository<Schedule, String> {
     @Query("{ 'idTour' : ?0 }")
     List<Schedule> getListScheduleByTourId(String idTour);
-    @Query("{$and: [{ 'idTour' : ?0 }, {'dayStart': {$gt:?1}}]}") //{$or: [{ 'idTour' : ?0 }, {'dayStart': { }}]}
+    @Query("{$and: [{ 'idTour' : ?0 }, {'dayStart': {$gt:?1}},{'status': true}]}") //{$or: [{ 'idTour' : ?0 }, {'dayStart': { }}]}
     List<Schedule> getListScheduleByTourIdActive(String idTour, Date day);
+    @Query("{$and: [{ 'idTour' : ?0 }, {'dayStart': {$gt:?1}}]}") //{$or: [{ 'idTour' : ?0 }, {'dayStart': { }}]}
+    List<Schedule> getListScheduleByTourIdActiveSeller(String idTour, Date day);
 
 
 
@@ -26,6 +29,22 @@ public interface ScheduleRepository extends MongoRepository<Schedule, String> {
     List<Schedule> getListScheduleActive( Date day);
     @Query("{$and: [{ 'idTour' : ?0 }, {'dayStart': {$lt:?1}}]}") //{$or: [{ 'idTour' : ?0 }, {'dayStart': { }}]}
     List<Schedule> getListScheduleByTourIdPass(String idTour, Date day);
+
+    @Aggregation(pipeline = {"{'$match':{ $text: { $search: ?0 } }}","{'$match':{'dayStart': {$gte:?1}}}","{'$match':{'dayStart': {$lte:?2}}}","{'$match':{'status': true}}"})
+    List<Schedule> filter(String address, LocalDate from,LocalDate to);
+
+    @Aggregation(pipeline = {"{'$match':{'dayStart': {$gte:?0}}}","{'$match':{'dayStart': {$lte:?1}}}","{'$match':{'status': true}}"})
+    List<Schedule> filterNoAddress( LocalDate from,LocalDate to);
+
+    @Aggregation(pipeline = {"{'$match':{'dayStart': {$gt:?0}}}","{'$match':{'status': false}}","{'$sort':{'dayStart':1}}"})
+    List<Schedule> getListScheduleDaChotChuaDi( Date day);
+    @Aggregation(pipeline = {"{'$match':{'dayStart': {$lt:?0}}}","{'$match':{'status': false}}","{'$sort':{'dayStart':1}}"})
+    List<Schedule> getListScheduleDaChotDaHoanThanh( Date day);
+    @Aggregation(pipeline = {"{'$match':{'dayStart': {$gt:?0}}}","{'$match':{'status': true}}","{'$sort':{'dayStart':1}}"})
+    List<Schedule> getListScheduleChuaChot(Date day);
+
+
+
 
 
 

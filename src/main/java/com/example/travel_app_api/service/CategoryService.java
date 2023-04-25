@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class CategoryService {
     @Autowired
     CategoryRepository categoryRepository;
+    public List<Category> getAll(){return categoryRepository.findAll();}
     public  Page<Category> findCategory(int page,int size,String sort){
         if(page<=0) page=1;
         return categoryRepository.findAll(PageRequest.of(page-1,size,Sort.by(sort).descending()));
@@ -71,4 +73,8 @@ public class CategoryService {
             categoryRepository.deleteById(id);
             return "Deleted";
     }
+    public int countCategory(){
+        return categoryRepository.findAll().size();
+    }
+
 }

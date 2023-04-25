@@ -2,6 +2,9 @@ package com.example.travel_app_api.controller;
 
 import com.example.travel_app_api.model.Schedule;
 import com.example.travel_app_api.model.Tour;
+import com.example.travel_app_api.request.FilterSchedule;
+import com.example.travel_app_api.request.FilterTour;
+import com.example.travel_app_api.response.DetailSchedule;
 import com.example.travel_app_api.response.ScheduleResponse;
 import com.example.travel_app_api.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,10 @@ public class ScheduleController {
     @GetMapping("/{idTour}")
     public List<Schedule> getListSchedule(@PathVariable String idTour){
         return scheduleService.getListScheduleByIdTour(idTour);
+    }
+    @GetMapping("/filter")
+    public List<Tour> getListScheduleTour(@RequestBody FilterSchedule filterSchedule){
+        return scheduleService.filterSchedule(filterSchedule.getAddressStart(),filterSchedule.getFrom(),filterSchedule.getTo());
     }
     @GetMapping("/all")
     public List<Schedule> getAllListSchedule(){
@@ -49,6 +56,15 @@ public class ScheduleController {
     public List<ScheduleResponse> getAllSchedule(){
         return scheduleService.listSchedule();
     }
+    @GetMapping("/detailpeople/{id}")
+    public Map<String,Object> getDetailPeopleById(@PathVariable String id){
+        return scheduleService.getDetaiPeopleSchedule(id);
+    }
+
+    @GetMapping("/listdetailschedule/{loai}")
+    public List<Schedule> getListDetailSchedule(@PathVariable String loai){
+        return scheduleService.quanLyChotTour(loai);
+    }
 
     @PostMapping()
     public Map<String,Object> addSchedule(@RequestBody Schedule schedule){
@@ -57,6 +73,10 @@ public class ScheduleController {
     @PutMapping
     public Map<String,Object> updateSchedule(@RequestBody Schedule schedule){
             return scheduleService.updateSchedule(schedule);
+    }
+    @PutMapping("/changestatus")
+    public String changeStatus(@RequestBody Schedule schedule){
+        return scheduleService.changeStatus(schedule.getId(),schedule.isStatus());
     }
     @DeleteMapping("/{id}")
     public Map<String, Object> daleteSchedule(@PathVariable String id){

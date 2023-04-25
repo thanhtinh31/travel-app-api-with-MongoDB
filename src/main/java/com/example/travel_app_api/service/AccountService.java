@@ -20,7 +20,6 @@ public class AccountService {
     @Autowired
     private EmailSenderService emailSenderService;
     public List<Account> listAcount(){
-
         return accountRepository.findAll();
     }
     public Account getAccountById(String id){return accountRepository.findById(id).get();}
@@ -73,7 +72,6 @@ public class AccountService {
                 accountRepository.save(account2);
                 m.put("account",account2 );
                 m.put("status","1");
-
             }
         }
         else{
