@@ -9,6 +9,7 @@ import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @CrossOrigin
@@ -19,15 +20,18 @@ public class PaypalController {
     @Autowired
     InvoiceService invoiceService;
 
+
     public static final String SUCCESS_URL="paypal/success";
     public static final String CANCEL_URL="paypal/cancel";
     @PostMapping("/paypal")
     public String payment(@RequestBody Invoice invoice){
         try {
+            String baseUrl =
+                    ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
             Payment payment= service.createPayment(invoice.getAmount()/25000,"USD",
                     "paypal","sale",invoice.getNote(),
-                    "http://localhost:8080/pay/"+CANCEL_URL
-                    ,"http://localhost:8080/pay/"+SUCCESS_URL+"?id="+invoice.getId());
+                    baseUrl+"/pay/"+CANCEL_URL
+                    ,baseUrl+"/pay/"+SUCCESS_URL+"?id="+invoice.getId());
             for(Links link:payment.getLinks()) {
                 if(link.getRel().equals("approval_url")) {
                     return link.getHref();
