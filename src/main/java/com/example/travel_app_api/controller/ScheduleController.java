@@ -33,9 +33,14 @@ public class ScheduleController {
         return scheduleService.getListSchedule();
     }
     @GetMapping("/active/{idTour}")
-    public List<Schedule> getListScheduleActiveById(@PathVariable String idTour){
+    public List<Schedule> getListScheduleActiveByIdTour(@PathVariable String idTour){
         return scheduleService.getListScheduleByIdTourActive(idTour);
     }
+    @GetMapping("/countactive/{idTour}")
+    public int countScheduleActiveByIdTour(@PathVariable String idTour){
+        return scheduleService.countScheduleActiveByIdTour(idTour);
+    }
+
     @GetMapping("/{status}/{idTour}")
     public List<Schedule> getListScheduleActiveById(@PathVariable String idTour,@PathVariable String status){
         return scheduleService.getListScheduleByIdTourStatus(idTour,status);
@@ -43,6 +48,10 @@ public class ScheduleController {
     @GetMapping("/all/active")
     public List<Schedule> getListScheduleActive(){
         return scheduleService.getListScheduleActive();
+    }
+    @GetMapping("/home")
+    public List<Schedule> getListLastTour(){
+        return scheduleService.getListLastTourHome();
     }
     @GetMapping("/gettour/{id}")
     public Tour getTour(@PathVariable String id){

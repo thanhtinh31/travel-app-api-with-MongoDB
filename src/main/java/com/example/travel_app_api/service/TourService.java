@@ -96,8 +96,16 @@ public class TourService {
     public int countTour(){
         return tourRepository.findAll().size();
     }
-    public Map<String,Object> countByIdCategory(String id){
-        return tourRepository.countByIdCategory(id);
+    public String deleteListTour(List<String> list){
+        for(int i=0;i<list.size();i++)
+        {
+            if(scheduleService.getListScheduleByIdTour(list.get(i)).size()!=0){
+                return "Tour đã co lich - khong duoc xoa";
+            }
+
+        }
+        tourRepository.deleteAllById(list);
+        return "Xóa thành công";
     }
 
 

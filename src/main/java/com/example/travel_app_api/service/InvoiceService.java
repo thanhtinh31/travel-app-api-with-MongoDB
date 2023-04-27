@@ -5,10 +5,12 @@ import com.example.travel_app_api.model.Schedule;
 import com.example.travel_app_api.model.Tour;
 import com.example.travel_app_api.repository.InvoiceRepository;
 import com.example.travel_app_api.response.CountInvoice;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -139,8 +141,9 @@ public class InvoiceService {
     public String huyHoaDon(String id,String lyDo){
         Invoice invoice=invoiceRepository.findById(id).get();
         invoice.setStatus(3);
+        invoice.setConfirm(false);
         invoiceRepository.save(invoice);
-        emailSenderService.sendMailHtml(invoice.getEmail(),"Thông báo hóa đơn","Tour cua ban da bi huy vi "+lyDo);
+      //  emailSenderService.sendMailHtml(invoice.getEmail(),"Thông báo hóa đơn","Tour cua ban da bi huy vi "+lyDo);
         return "Hủy thành công";
     }
     public String thanhToan(String id,String nhanVien){
@@ -149,16 +152,52 @@ public class InvoiceService {
         invoice.setStatus(2);
         invoice.setPayDay(date.toString());
         invoice.setPayments("Tại cửa hàng");
+        invoice.setConfirm(false);
         invoice.setNhanVien(nhanVien);
         invoiceRepository.save(invoice);
         emailSenderService.sendMailHtml(invoice.getEmail(),"Thông báo hóa đơn","Thanh toán thành công nhân viên "+nhanVien);
         return "Thanh toán thành công";
     }
+    public Map<String,Object> updateThanhToanVNPay(Invoice invoice){
+        Map<String,Object> m=new HashMap<>();
+        Invoice invoice1=getInvoiceById(invoice.getId());
+        invoice1.setIdPayment(invoice.getIdPayment());
+        invoice1.setBank(invoice.getBank());
+        invoice1.setPayments("Thanh toán VNPAY");
+        invoice1.setStatus(2);
+        LocalDateTime localDateTime=LocalDateTime.now();
+        invoice1.setPayDay(localDateTime.toString());
+        invoiceRepository.save(invoice1);
+        return m;
+    }
+
     public String xoaHoaDon(String id){
         Invoice invoice=invoiceRepository.findById(id).get();
         if(invoice.getStatus()!=3) return "Xóa không thành công";
         else invoiceRepository.delete(invoice);
         return "Xóa thành công";
+    }
+    public Map<String,Object> xuLyHoaDon(List<String> list){
+        Map<String, Object> m=new HashMap<>();
+        for(int i=0;i<list.size();i++){
+            Invoice invoice=getInvoiceById(list.get(i));
+            invoice.setConfirm(true);
+            invoiceRepository.save(invoice);
+        }
+        m.put("status","1");
+        m.put("message","Xử lý thành công");
+        return m;
+    }
+    public Map<String,Object> xacNhanTatCa(List<String> list){
+        Map<String, Object> m=new HashMap<>();
+        for(int i=0;i<list.size();i++){
+            Invoice invoice=getInvoiceById(list.get(i));
+            invoice.setStatus(1);
+            invoiceRepository.save(invoice);
+        }
+        m.put("status","1");
+        m.put("message","Xác nhận thành công");
+        return m;
     }
 
 

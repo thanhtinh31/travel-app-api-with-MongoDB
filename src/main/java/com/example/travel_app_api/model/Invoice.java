@@ -36,4 +36,5 @@ public class Invoice {
     private String idSchedule;
     private String idAccount;
     private String nhanVien;
+    private boolean confirm=false;
 }

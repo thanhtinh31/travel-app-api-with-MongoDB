@@ -59,6 +59,10 @@ public class InvoiceController {
     public String xacnhan(@PathVariable String id){
         return invoiceService.xacNhanHoaDon(id);
     }
+    @PutMapping("/xacnhantatca/{list}")
+    public Map<String,Object> xacNhanTatCa(@PathVariable List<String> list){
+        return invoiceService.xacNhanTatCa(list);
+    }
     @PutMapping("/huy/{id}")
     public String xacnhan(@PathVariable String id,@RequestParam String lyDo){
         return invoiceService.huyHoaDon(id,lyDo);
@@ -67,9 +71,17 @@ public class InvoiceController {
     public String thanhtoan(@PathVariable String id,@RequestParam String nhanVien){
         return invoiceService.thanhToan(id,nhanVien);
     }
+    @PutMapping("/thanhtoanvnpay")
+    public Map<String, Object> thanhtoanvnpay(@RequestBody Invoice invoice){
+        return invoiceService.updateThanhToanVNPay(invoice);
+    }
     @DeleteMapping("/{id}")
     public String xoahoadon(@PathVariable String id){
         return invoiceService.xoaHoaDon(id);
+    }
+    @PutMapping("/xuly/{list}")
+    public Map<String,Object> xuLyHoaDon(@PathVariable List<String> list){
+        return invoiceService.xuLyHoaDon(list);
     }
 
 

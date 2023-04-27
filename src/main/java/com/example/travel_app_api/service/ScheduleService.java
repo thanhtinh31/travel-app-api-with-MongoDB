@@ -48,6 +48,11 @@ public class ScheduleService {
         Date date = new java.sql.Date(millis);
         return scheduleRepository.getListScheduleByTourIdActive(idTour,date);
     }
+    public int countScheduleActiveByIdTour(String idTour){
+        long millis = System.currentTimeMillis();
+        Date date = new java.sql.Date(millis);
+        return scheduleRepository.getListScheduleByTourIdActive(idTour,date).size();
+    }
     public List<Schedule> getListScheduleByIdTourStatus(String idTour,String status){
         long millis = System.currentTimeMillis();
         Date date = new java.sql.Date(millis);
@@ -59,9 +64,16 @@ public class ScheduleService {
         long millis = System.currentTimeMillis();
         Date date = new java.sql.Date(millis);
         List<Schedule> list=scheduleRepository.getListScheduleActive(date);
-
         return list;
     }
+    public List<Schedule> getListLastTourHome(){
+        long millis = System.currentTimeMillis();
+        Date date = new java.sql.Date(millis);
+        List<Schedule> list=scheduleRepository.getListScheduleActive(date);
+        return list;
+    }
+
+
     public Tour getTour(String id){
         Schedule schedule =scheduleRepository.findById(id).get();
         Tour tour=tourRepository.findById(schedule.getIdTour()).get();
@@ -135,6 +147,7 @@ public class ScheduleService {
     }
     public Map<String,Object> deleteSchedule(String id){
         Map<String,Object> m=new HashMap<>();
+
         if(invoiceRepository.getListInvoiceByIdSchedule(id).size()!=0)
         {
             m.put("status","0");
@@ -188,12 +201,14 @@ public class ScheduleService {
     public Map<String,Object> getDetaiPeopleSchedule(String idSchedule){
         Map<String,Object> m=new HashMap<>();
         List<Invoice> invoices=invoiceRepository.getListInvoiceByIdSchedule(idSchedule);
-        int dachot=0,chuachot=0,dahuy=0;
+        int dachot=0,chuachot=0,dahuy=0,choxacnhan=0;
         for(int i=0;i<invoices.size();i++){
             if(invoices.get(i).getStatus()==2) dachot=dachot+invoices.get(i).getPeople();
             else if(invoices.get(i).getStatus()==1) chuachot=chuachot+invoices.get(i).getPeople();
             else if(invoices.get(i).getStatus()==3) dahuy=dahuy+invoices.get(i).getPeople();
+            else choxacnhan=choxacnhan+invoices.get(i).getPeople();
         }
+        m.put("choxacnhan",choxacnhan);
         m.put("dachot",dachot);
         m.put("chuachot",chuachot);
         m.put("dahuy",dahuy);
@@ -228,5 +243,6 @@ public class ScheduleService {
         scheduleRepository.save(schedule);
         return "Thay đổi thành công";
     }
+
 
 }

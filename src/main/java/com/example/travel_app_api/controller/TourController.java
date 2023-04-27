@@ -64,6 +64,10 @@ public class TourController {
     public String deleteTour(@PathVariable String id){
         return tourService.deleteTour(id);
     }
+    @DeleteMapping("/deletelist/{ids}")
+    public String deleteTour(@PathVariable List<String> ids){
+        return tourService.deleteListTour(ids);
+    }
 
     @PutMapping
     public Tour update(@RequestBody Tour tour){
