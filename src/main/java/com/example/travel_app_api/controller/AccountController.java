@@ -68,5 +68,10 @@ public class AccountController {
     public String changeTypeAccount(@RequestBody Account account){
         return accountService.changeTypeAccount(account);
     }
+    @PostMapping("/forgotpass/{email}")
+    public Map<String,Object> forgotpass(@PathVariable String email){
+        return accountService.forgetPassword(email);
+    }
+
 
 }

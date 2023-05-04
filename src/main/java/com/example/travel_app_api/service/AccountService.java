@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -30,8 +31,10 @@ public class AccountService {
             if(account.isStatus()){
                 if(accountRepository.login(email,password)!=null){
                     Account account1=accountRepository.login(email,password);
-                    LocalDateTime now=LocalDateTime.now();
+                    LocalDateTime now=LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+                    System.out.println(now);
                     account1.setTimeLogin(now);
+                    System.out.println(account1.getTimeLogin());
                     accountRepository.save(account1);
                     m.put("account",account1);
                     m.put("message","Đăng nhập thành công");
@@ -67,7 +70,8 @@ public class AccountService {
                 m.put("message","Tài khoản đã bị khóa");
             }else {
                 Account account2=accountRepository.getAccountByIDFacebook(account.getIdFacebook());
-                LocalDateTime now=LocalDateTime.now();
+                LocalDateTime now=LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+
                 account2.setTimeLogin(now);
                 accountRepository.save(account2);
                 m.put("account",account2 );
@@ -295,7 +299,7 @@ public class AccountService {
     public Map<String,Object> forgetPassword(String email){
         Map<String,Object> m=new HashMap<>();
         if(accountRepository.getAcountByEmail(email)!=null){
-            int code=verify(email,"");
+            int code=verify(email,accountRepository.getAcountByEmail(email).getNameAccount());
             m.put("status","1");
             m.put("code",code);
             m.put("account",accountRepository.getAcountByEmail(email));

@@ -34,6 +34,7 @@ public class Account {
     private boolean status;
 
     private int typeAccount;
+
     private LocalDateTime timeLogin;
 
 
