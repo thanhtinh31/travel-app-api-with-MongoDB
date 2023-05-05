@@ -61,21 +61,22 @@ public class InvoiceService {
     }
     public Map<String,Object> getDetailInvoice(String id){
         Map<String,Object> m=new HashMap<>();
-//        try {
-//            Invoice invoice=invoiceRepository.findById(id).get();
-//            m.put("invoice",invoice);
-//            try {
-//                m.put("schedule",scheduleService.getSchedule(invoice.getIdSchedule()));
-//            }catch (Exception a){
-//                m.put("schedule","0");
-//            }
+        try {
+            Invoice invoice=invoiceRepository.findById(id).get();
+            m.put("invoice",invoice);
+            try {
+                m.put("schedule",scheduleService.getSchedule(invoice.getIdSchedule()));
+                m.put("tour",scheduleService.getTour(invoice.getIdSchedule()));
+            }catch (Exception a){
+                m.put("schedule","0");
+            }
 //            try {
 //                m.put("account",accountService.getAccountById(invoice.getIdAccount()));
 //            }catch (Exception b){
 //                m.put("account","0");
 //            }
-//            m.put("status","1");
-//        }catch (Exception e)
+            m.put("status","1");
+        }catch (Exception e)
         {
             m.put("message","khong tim thay");
             m.put("status","0");

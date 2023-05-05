@@ -2,13 +2,13 @@ package com.example.travel_app_api.service;
 
 import com.example.travel_app_api.model.Account;
 import com.example.travel_app_api.repository.AccountRepository;
-import com.google.firebase.auth.hash.Bcrypt;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

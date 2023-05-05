@@ -83,7 +83,7 @@ public class PaypalService {
                     "Số tiền thanh toán:"+invoice.getAmount()+" vnđ <br/>" +
                     "<h3>Chúc bạn có một chuyến đi vui vẻ</h3>");
             return
-                    "<HTML><body>Thanh toán thành công <a href=\"http://localhost:3000/history\">Link clik to go</a></body></HTML>";
+                    "<HTML><body>Thanh toán thành công <a href=\"http://localhost:3000/bookingsuccess?id="+invoice.getId()+"\">Link clik to go</a></body></HTML>";
             // return payment.toJSON();
         }
         else {
