@@ -92,12 +92,23 @@ public class AccountService {
     public Account addAccount(Account account){
         return accountRepository.save(account);
     }
-    public Account editAccount(Account account){
+    public Map<String,Object> editAccount(Account account){
+        Map<String,Object> m=new HashMap<>();
         Account account1=accountRepository.findById(account.getId()).get();
-        account1.setAddress(account.getAddress());
-        account1.setPhoneNumber(account.getPhoneNumber());
-        account1.setPassword(account.getPassword());
-        return accountRepository.save(account1);
+        if(account1!=null) {
+            account1.setAddress(account.getAddress());
+            account1.setPhoneNumber(account.getPhoneNumber());
+            account1.setNameAccount(account.getNameAccount());
+            account1.setImage(account.getImage());
+            accountRepository.save(account1);
+            m.put("status", "1");
+            m.put("message", "Cập nhật thành công");
+        }else{
+            m.put("status", "0");
+            m.put("message", "Không tìm thấy tài khoản");
+        }
+
+        return m;
     }
     public String deleteAccount(String idAccount){
         accountRepository.deleteById(idAccount);
@@ -321,9 +332,9 @@ public class AccountService {
         accountRepository.save(account1);
         return "thanh cong";
     }
-    public Map<String,Object> changePassword(String email,String oldPass,String newPass){
+    public Map<String,Object> changePassword(String id,String oldPass,String newPass){
         Map<String,Object> m=new HashMap<>();
-        Account account=accountRepository.getAcountByEmail(email);
+        Account account=accountRepository.findById(id).get();
         if(oldPass.equals(account.getPassword())){
             if(oldPass.equals(newPass)){
                 m.put("message","Mật khẩu không được giống cũ");
@@ -332,7 +343,8 @@ public class AccountService {
                 //changePass
                 account.setPassword(newPass);
                 accountRepository.save(account);
-                emailSenderService.sendMail(email,"Travel app thông báo","Mật khẩu tài khoản của bạn đã thay đổi vào lúc "+java.time.LocalDateTime.now());
+                if(account.getEmail()!=null)
+                emailSenderService.sendMail(account.getEmail(),"Travel app thông báo","Mật khẩu tài khoản của bạn đã thay đổi vào lúc "+java.time.LocalDateTime.now());
                 m.put("message","Thay đổi mật khẩu thành công, vui lòng đăng nhập lại");
                 m.put("status","1");
                 return m;

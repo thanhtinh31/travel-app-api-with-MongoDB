@@ -58,7 +58,7 @@ public class AccountController {
 
     @PostMapping("/changepassword")
     public Map<String,Object> changPassword(@RequestBody ChangePasswordRequest changePasswordRequest){
-        return accountService.changePassword(changePasswordRequest.getEmail(),changePasswordRequest.getOldPass(),changePasswordRequest.getNewPass());
+        return accountService.changePassword(changePasswordRequest.getId(),changePasswordRequest.getOldPass(),changePasswordRequest.getNewPass());
     }
     @PostMapping("/changestatus")
     public String changeStatus(@RequestBody Account account){
@@ -72,6 +72,9 @@ public class AccountController {
     public Map<String,Object> forgotpass(@PathVariable String email){
         return accountService.forgetPassword(email);
     }
-
+    @PutMapping()
+    public Map<String,Object> update(@RequestBody Account account){
+        return accountService.editAccount(account);
+    }
 
 }
