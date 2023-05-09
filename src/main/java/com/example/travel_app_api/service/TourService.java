@@ -1,7 +1,9 @@
 package com.example.travel_app_api.service;
+import com.example.travel_app_api.model.Rating;
 import com.example.travel_app_api.model.Tour;
 import com.example.travel_app_api.repository.TourRepository;
 import com.example.travel_app_api.request.FilterTour;
+import com.example.travel_app_api.response.ItemTour;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +21,8 @@ public class TourService {
     TourRepository tourRepository;
     @Autowired
     ScheduleService scheduleService;
+    @Autowired
+    RatingService ratingService;
     public Page<Tour> getListTour(int page, int size, String sort){
         if(page<=0) page=1;
         return tourRepository.findAll(PageRequest.of(page-1,size, Sort.by(sort).descending()));
@@ -29,9 +33,27 @@ public class TourService {
     public List<Tour> getTourActive(){
         return tourRepository.getListTourActive();
     };
-    public List<Tour> getTourHomeActive(){
-        return tourRepository.getListTourHomeActive();
+    public List<ItemTour> getTourHomeActive(){
+        List<ItemTour> itemTours=tourRepository.getListTourHomeActive();
+        for (int i=0;i<itemTours.size();i++)
+        {
+            itemTours.get(i).setStar(danhGia(itemTours.get(i).getId()));
+        }
+        return itemTours;
     };
+
+    public double danhGia(String idTour){
+
+        double total=0;
+        List<Rating> ratings=ratingService.getRatingByidTour(idTour);
+        for(int i=0;i<ratings.size();i++)
+        {
+            total=total+ratings.get(i).getStar();
+        }
+        if (ratings.size()==0) return 5.0;
+        return total/ratings.size();
+    }
+
     public List<Tour> getTourFilter(FilterTour filterTour){
         if(filterTour.getAddress()==null){
             if(filterTour.getIdCategory()==null) return tourRepository.filterNoAddressNoCategory(filterTour.getGt(),filterTour.getLt(),filterTour.getSort());

@@ -17,15 +17,15 @@ import java.util.Map;
 public interface ScheduleRepository extends MongoRepository<Schedule, String> {
     @Query("{ 'idTour' : ?0 }")
     List<Schedule> getListScheduleByTourId(String idTour);
-    @Query("{$and: [{ 'idTour' : ?0 }, {'dayStart': {$gt:?1}},{'status': true}]}") //{$or: [{ 'idTour' : ?0 }, {'dayStart': { }}]}
+    @Query("{$and: [{ 'idTour' : ?0 ,'progress':{ $in: [0,1,2] }}, {'dayStart': {$gt:?1}},{'status': true}]}") //{$or: [{ 'idTour' : ?0 }, {'dayStart': { }}]}
     List<Schedule> getListScheduleByTourIdActive(String idTour, Date day);
-    @Query("{$and: [{ 'idTour' : ?0 }, {'dayStart': {$gt:?1}}]}") //{$or: [{ 'idTour' : ?0 }, {'dayStart': { }}]}
+    @Query("{$and: [{ 'idTour' : ?0,'progress':{ $in: [0,1,2] } }, {'dayStart': {$gt:?1}}]}") //{$or: [{ 'idTour' : ?0 }, {'dayStart': { }}]}
     List<Schedule> getListScheduleByTourIdActiveSeller(String idTour, Date day);
 
 
 
    // @Query(" {'dayStart': {$gt:?0}}" ) //{$or: [{ 'idTour' : ?0 }, {'dayStart': { }}]}
-    @Aggregation(pipeline = {"{'$match':{'dayStart': {$gt:?0}}}","{'$match':{'status': true}}","{'$sort':{'dayStart':1}}","{ $limit : 3 }"})
+    @Aggregation(pipeline = {"{'$match':{'dayStart': {$gt:?0}}}","{'$match':{'status': true,'progress':{ $in: [0,1,2] }}}","{'$sort':{'dayStart':1}}","{ $limit : 3 }"})
     List<Schedule> getListScheduleActive( Date day);
     @Query("{$and: [{ 'idTour' : ?0 }, {'dayStart': {$lt:?1}}]}") //{$or: [{ 'idTour' : ?0 }, {'dayStart': { }}]}
     List<Schedule> getListScheduleByTourIdPass(String idTour, Date day);
@@ -38,12 +38,26 @@ public interface ScheduleRepository extends MongoRepository<Schedule, String> {
 
     @Aggregation(pipeline = {"{'$match':{'dayStart': {$gt:?0}}}","{'$match':{'status': false}}","{'$sort':{'dayStart':1}}"})
     List<Schedule> getListScheduleDaChotChuaDi( Date day);
-    @Aggregation(pipeline = {"{'$match':{'dayStart': {$lt:?0}}}","{'$match':{'status': false}}","{'$sort':{'dayStart':1}}"})
+    @Aggregation(pipeline = {"{'$match':{'status': false,'progress':2}}","{'$sort':{'dayStart':1}}"})
     List<Schedule> getListScheduleDaChotDaHoanThanh( Date day);
     @Aggregation(pipeline = {"{'$match':{'dayStart': {$gt:?0}}}","{'$match':{'status': true}}","{'$sort':{'dayStart':1}}"})
-    List<Schedule> getListScheduleChuaChot(Date day);
+    List<Schedule> getListScheduleChuaChotChuaDi(Date day);
+
+    @Aggregation(pipeline = {"{'$match':{'status': false,'progress':{ $in: [0] }}}","{'$sort':{'dayStart':1}}"})
+    List<Schedule> getListScheduleDaChot( Date day);
+    @Aggregation(pipeline = {"{'$match':{'status': true,'progress':{ $in: [0,1] }}}","{'$sort':{'dayStart':1}}"})
+    List<Schedule> getListScheduleChuaChot( Date day);
+
+    @Aggregation(pipeline = {"{'$match':{'status': false,'progress':{ $in: [1] }}}","{'$sort':{'dayStart':1}}"})
+    List<Schedule> getListScheduleDangKhoiHanh( Date day);
+
+    @Aggregation(pipeline = {"{'$match':{'progress':{ $in: [3] }}}","{'$sort':{'dayStart':1}}"})
+    List<Schedule> getListScheduleDaHuy( Date day);
 
 
+
+
+//{ $in: [<value1>, <value2>, ... <valueN> ] }
 
 
 

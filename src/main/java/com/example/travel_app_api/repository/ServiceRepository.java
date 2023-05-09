@@ -12,4 +12,6 @@ public interface ServiceRepository extends MongoRepository<Service,String> {
     List<Service> getAllServiceActive();
     @Query("{ 'id' : ?0 }")
     Service getServiceByid(String id);
+    @Query("{ 'id' : { $in: ?0 } }")
+    List<Service> getServiceByListId(List<String> ids);
 }

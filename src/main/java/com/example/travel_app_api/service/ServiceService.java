@@ -49,6 +49,9 @@ public class ServiceService {
     public com.example.travel_app_api.model.Service getServiceById(String id){
         return serviceRepository.getServiceByid(id);
     }
+    public List<com.example.travel_app_api.model.Service> getServiceByListId(List<String> ids){
+        return serviceRepository.getServiceByListId(ids);
+    }
     public Map<String,Object> update(com.example.travel_app_api.model.Service service){
         Map<String,Object> m=new HashMap<>();
         com.example.travel_app_api.model.Service service1=getServiceById(service.getId());

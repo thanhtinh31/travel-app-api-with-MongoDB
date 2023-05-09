@@ -4,6 +4,7 @@ import com.example.travel_app_api.model.Account;
 import com.example.travel_app_api.model.Category;
 import com.example.travel_app_api.model.Tour;
 import com.example.travel_app_api.request.FilterTour;
+import com.example.travel_app_api.response.ItemTour;
 import com.example.travel_app_api.service.AccountService;
 import com.example.travel_app_api.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class TourController {
         return  tourService.getTourActive();
     }
     @GetMapping("/homeactive")
-    public List<Tour> getTourHomeActive(){
+    public List<ItemTour> getTourHomeActive(){
         return  tourService.getTourHomeActive();
     }
     @GetMapping("/all")

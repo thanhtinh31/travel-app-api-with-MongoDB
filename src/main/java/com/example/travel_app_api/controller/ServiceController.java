@@ -21,6 +21,10 @@ public class ServiceController {
     public Service getTourById(@PathVariable String id){
         return  serviceService.getServiceById(id);
     }
+    @GetMapping("/list/{ids}")
+    public List<Service> getTourById(@PathVariable List<String> ids){
+        return  serviceService.getServiceByListId(ids);
+    }
     @GetMapping("/all")
     public List<Service> getAll(){
         return  serviceService.getAllService();

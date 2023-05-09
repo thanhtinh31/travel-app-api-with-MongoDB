@@ -27,6 +27,8 @@ public class ScheduleService {
     private TourRepository tourRepository;
     @Autowired
     InvoiceRepository invoiceRepository;
+    @Autowired
+    private EmailSenderService emailSenderService;
 
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
     public List<Schedule> getListScheduleByIdTour(String idTour){
@@ -78,7 +80,6 @@ public class ScheduleService {
         Schedule schedule =scheduleRepository.findById(id).get();
         Tour tour=tourRepository.findById(schedule.getIdTour()).get();
         return tour;
-
     }
     public Schedule getSchedule(String id){
         Schedule schedule =scheduleRepository.findById(id).get();
@@ -219,10 +220,12 @@ public class ScheduleService {
         long millis = System.currentTimeMillis();
         Date date = new java.sql.Date(millis);
         List<Schedule> schedules;
-        if(loai.equals("dachot")) schedules=scheduleRepository.getListScheduleDaChotChuaDi(date);
+        if(loai.equals("dachot")) schedules=scheduleRepository.getListScheduleDaChot(date);
         else if(loai.equals("chuachot")) schedules=scheduleRepository.getListScheduleChuaChot(date);
+        else if(loai.equals("dahuy")) schedules=scheduleRepository.getListScheduleDaHuy(date);
+        else if(loai.equals("dangkhoihanh")) schedules=scheduleRepository.getListScheduleDangKhoiHanh(date);
         else schedules=scheduleRepository.getListScheduleDaChotDaHoanThanh(date);
-        System.out.println(schedules.size());
+       // System.out.println(schedules.size());
 //        for (int i=0;i<schedules.size();i++){
 //            DetailSchedule m=new DetailSchedule();
 //            m.setTitle(tourRepository.findById(schedules.get(i).getIdTour()).get().getTitle());
@@ -237,11 +240,57 @@ public class ScheduleService {
         return schedules;
     }
 
+    public Map<String,Object> huyTour(String idSchedule,String lydo){
+        Map<String,Object> m=new HashMap<>();
+        if(lydo!=null&&idSchedule!=null) {
+            Schedule schedule = getSchedule(idSchedule);
+            schedule.setStatus(false);
+            schedule.setProgress(3);
+            scheduleRepository.save(schedule);
+            List<Invoice> invoices = invoiceRepository.getListInvoiceByIdSchedule(idSchedule);
+            List<String> listEmail = new ArrayList<>();
+            for (int i = 0; i < invoices.size(); i++) {
+                listEmail.add(invoices.get(i).getEmail());
+                invoices.get(i).setStatus(3);
+                invoices.get(i).setConfirm(false);
+                invoiceRepository.save(invoices.get(i));
+            }
+            if (listEmail != null)
+                emailSenderService.sendListMailHtml(listEmail, "THÔNG BÁO HỦY TOUR", "Tour của bạn đã bị hủy vì lí do "+lydo);
+            m.put("status","1");
+        }
+        else m.put("status","0");
+        return m;
+    }
     public String changeStatus(String idSchedule,Boolean status){
         Schedule schedule=getSchedule(idSchedule);
         schedule.setStatus(status);
         scheduleRepository.save(schedule);
         return "Thay đổi thành công";
+    }
+    public String updateProgress(String id,int progress){
+        Schedule schedule=getSchedule(id);
+        schedule.setProgress(progress);
+        scheduleRepository.save(schedule);
+        return "Thanh cong";
+    }
+    public Map<String,Object> countPeople(String idSchedule){
+        Map<String,Object> m=new HashMap<>();
+        List<Invoice> invoices=invoiceRepository.getListInvoiceByIdSchedule(idSchedule);
+        int cxn=0,ctt=0,dtt=0,h=0;
+        for (int i=0;i<invoices.size();i++)
+        {
+            if(invoices.get(i).getStatus()==0) cxn=cxn+invoices.get(i).getPeople();
+            else if(invoices.get(i).getStatus()==1) ctt=ctt+invoices.get(i).getPeople();
+            else if(invoices.get(i).getStatus()==2) dtt=dtt+invoices.get(i).getPeople();
+            else  h=h+invoices.get(i).getPeople();
+
+        }
+        m.put("cxn",cxn);
+        m.put("ctt",ctt);
+        m.put("dtt",dtt);
+        m.put("dh",h);
+        return m;
     }
 
 

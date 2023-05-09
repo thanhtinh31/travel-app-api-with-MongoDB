@@ -38,6 +38,13 @@ public class InvoiceController {
     public List<Invoice> getListIncoiceByIdAccountStatus(@PathVariable String id,@PathVariable int status){
         return invoiceService.getListInvoiceByIdAccountStatus(id,status);
     }
+
+    @GetMapping("/mytour/{id}")
+    public List<Map<String,Object>> getLisChiTietByIdAccountStatus(@PathVariable String id){
+        return invoiceService.getListChiTietByIdAccount(id);
+    }
+
+
     @GetMapping("/{status}")
     public List<Invoice> getListIncoiceByStatus(@PathVariable String status){
         return invoiceService.getListInvoiceByStatus(status);

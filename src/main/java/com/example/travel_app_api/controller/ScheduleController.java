@@ -83,13 +83,22 @@ public class ScheduleController {
     public Map<String,Object> updateSchedule(@RequestBody Schedule schedule){
             return scheduleService.updateSchedule(schedule);
     }
+    @PutMapping("/huytour/{id}/{lydo}")
+    public Map<String,Object> huySchedule(@PathVariable String id,@PathVariable String lydo){
+        return scheduleService.huyTour(id,lydo);
+    }
     @PutMapping("/changestatus")
     public String changeStatus(@RequestBody Schedule schedule){
         return scheduleService.changeStatus(schedule.getId(),schedule.isStatus());
+    }
+    @PutMapping("/changeprogress/{id}/{progress}")
+    public String changeProgress(@PathVariable String id,@PathVariable int progress){
+        return scheduleService.updateProgress(id,progress);
     }
     @DeleteMapping("/{id}")
     public Map<String, Object> daleteSchedule(@PathVariable String id){
         return scheduleService.deleteSchedule(id);
     }
+
 
 }

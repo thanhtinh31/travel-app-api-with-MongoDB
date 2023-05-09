@@ -12,10 +12,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class InvoiceService {
@@ -156,7 +154,19 @@ public class InvoiceService {
         invoice.setConfirm(false);
         invoice.setNhanVien(nhanVien);
         invoiceRepository.save(invoice);
-        emailSenderService.sendMailHtml(invoice.getEmail(),"Thông báo hóa đơn","Thanh toán thành công nhân viên "+nhanVien);
+
+        emailSenderService.sendMailHtml(invoice.getEmail(),"Giao dịch thành công","<h2>Thanh toán hóa đơn thành công</h2><br/>" +
+                "Mã hóa đơn:"+invoice.getId()+"<br/>" +
+                "Người đặt:"+invoice.getFullName()+"<br/>" +
+                "Địa chỉ:"+invoice.getAddress()+"<br/>" +
+                "Ngày lập hóa đơn:"+invoice.getDateInvoice()+"<br/>" +
+                "Ngày thanh toán:"+invoice.getPayDay()+"<br/>" +
+                "Hình thức thanh toán:"+invoice.getPayments()+"<br/>" +
+
+                "Số tiền thanh toán:"+invoice.getAmount()+" vnđ <br/>" +
+                "Nhân viên :"+nhanVien+"<br/>" +
+                "<h3>Chúc bạn có một chuyến đi vui vẻ</h3>");
+
         return "Thanh toán thành công";
     }
     public Map<String,Object> updateThanhToanVNPay(Invoice invoice){
@@ -169,6 +179,17 @@ public class InvoiceService {
         LocalDateTime localDateTime=LocalDateTime.now();
         invoice1.setPayDay(localDateTime.toString());
         invoiceRepository.save(invoice1);
+        emailSenderService.sendMailHtml(invoice1.getEmail(),"Giao dịch thành công","<h2>Thanh toán hóa đơn thành công</h2><br/>" +
+                "Mã hóa đơn:"+invoice1.getId()+"<br/>" +
+                "Người đặt:"+invoice1.getFullName()+"<br/>" +
+                "Địa chỉ:"+invoice1.getAddress()+"<br/>" +
+                "Ngày lập hóa đơn:"+invoice1.getDateInvoice()+"<br/>" +
+                "Ngày thanh toán:"+invoice1.getPayDay()+"<br/>" +
+                "Hình thức thanh toán:"+invoice1.getPayments()+"<br/>" +
+                "Ngân hàng:"+invoice1.getBank()+"<br/>" +
+                "Mã giao dịch:"+invoice1.getIdPayment()+"<br/>" +
+                "Số tiền thanh toán:"+invoice1.getAmount()+" vnđ <br/>" +
+                "<h3>Chúc bạn có một chuyến đi vui vẻ</h3>");
         return m;
     }
 
@@ -199,6 +220,46 @@ public class InvoiceService {
         m.put("status","1");
         m.put("message","Xác nhận thành công");
         return m;
+    }
+
+    public Map<String,Object> getChiTiet(String idInvoice){
+        Date now=new Date();
+        Map<String,Object> m=new HashMap<>();
+        Invoice invoice=getInvoiceById(idInvoice);
+        m.put("people",invoice.getPeople());
+        m.put("status",invoice.getStatus());
+        m.put("totalpeople",scheduleService.countPeople(invoice.getIdSchedule()));
+        m.put("amount",invoice.getAmount());
+        Schedule schedule=scheduleService.getSchedule(invoice.getIdSchedule());
+        long getDiff = schedule.getDayStart().getTime() - now.getTime();
+        long getDaysDiff = TimeUnit.MILLISECONDS.toDays(getDiff);
+        m.put("dayStart",schedule.getDayStart());
+        m.put("countDay",getDaysDiff);
+        m.put("addressStart",schedule.getAddressStart());
+        m.put("idTour",schedule.getIdTour());
+        m.put("tourGuide",schedule.getTourGuide());
+        m.put("phone",schedule.getPhone());
+        m.put("progress",schedule.getProgress());
+        Tour tour=scheduleService.getTour(schedule.getId());
+        m.put("vehicle",tour.getVehicle());
+        m.put("title",tour.getTitle());
+        m.put("subTitle",tour.getSubTitle());
+        m.put("services",tour.getIdService());
+        m.put("image",tour.getImage().get(0));
+        m.put("price",tour.getPrice());
+        m.put("sale",tour.getSale());
+        m.put("address",tour.getAddress());
+
+        return m;
+    }
+    public List<Map<String,Object>> getListChiTietByIdAccount(String idAccount){
+        List<Map<String,Object>> list =new ArrayList<>();
+        List<Invoice> invoices=getListInvoiceByIdAccount(idAccount);
+        for(int i=0;i<invoices.size();i++)
+        {
+            list.add(getChiTiet(invoices.get(i).getId()));
+        }
+        return list;
     }
 
 

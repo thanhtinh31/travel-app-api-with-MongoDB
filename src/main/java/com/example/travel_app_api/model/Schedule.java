@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 @Document(collection = "schedule")
 @Data
@@ -16,11 +18,13 @@ public class Schedule {
     private String tourGuide;
     private String phone;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
+    @DateTimeFormat(pattern = "MM/dd/yyyy")
     private Date dayStart;
     private String addressStart;
-    private int maxPeople;
-    private int daDat;
+//    private int maxPeople;
+//    private int daDat;
     private String idTour;
     private boolean status;
+    private int progress;
 
 }
