@@ -3,12 +3,16 @@ package com.example.travel_app_api.service;
 import com.example.travel_app_api.model.Account;
 import com.example.travel_app_api.repository.AccountRepository;
 
+import com.example.travel_app_api.response.AccountResponse;
+import com.google.firebase.auth.hash.Bcrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,17 +24,19 @@ public class AccountService {
     private AccountRepository accountRepository;
     @Autowired
     private EmailSenderService emailSenderService;
-    public List<Account> listAcount(){
+
+    public List<AccountResponse> listAcount(){
         return accountRepository.getAll();
     }
     public Account getAccountById(String id){return accountRepository.findById(id).get();}
     public Map<String,Object> login(String email,String password){
+        String pass= Base64.getEncoder().encodeToString(password.getBytes());
         Map<String,Object> m=new HashMap<>();
-        Account account=accountRepository.getAcountByEmail(email);
+        AccountResponse account=accountRepository.getAcountByEmail(email);
         if(account!=null){
             if(account.isStatus()){
-                if(accountRepository.login(email,password)!=null){
-                    Account account1=accountRepository.login(email,password);
+                if(accountRepository.login(email,pass)!=null){
+                    Account account1=accountRepository.login(email,pass);
                     LocalDateTime now=LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
                     System.out.println(now);
                     account1.setTimeLogin(now);
@@ -86,10 +92,12 @@ public class AccountService {
         }
         return m;
     }
-    public List<Account> getActive(){
+    public List<AccountResponse> getActive(){
         return accountRepository.getAcountActive();
     }
     public Account addAccount(Account account){
+        String pass= Base64.getEncoder().encodeToString(account.getPassword().getBytes());
+        account.setPassword(pass);
         return accountRepository.save(account);
     }
     public Map<String,Object> editAccount(Account account){
@@ -114,7 +122,7 @@ public class AccountService {
         accountRepository.deleteById(idAccount);
         return "Deleted";
     }
-    public Account findAccountByEmail(String email){
+    public AccountResponse findAccountByEmail(String email){
         if(accountRepository.getAcountByEmail(email)==null){
            return null;
         }
@@ -333,15 +341,17 @@ public class AccountService {
         return "thanh cong";
     }
     public Map<String,Object> changePassword(String id,String oldPass,String newPass){
+        String pass= Base64.getEncoder().encodeToString(oldPass.getBytes());
+        String newPassword= Base64.getEncoder().encodeToString(newPass.getBytes());
         Map<String,Object> m=new HashMap<>();
         Account account=accountRepository.findById(id).get();
-        if(oldPass.equals(account.getPassword())){
-            if(oldPass.equals(newPass)){
+        if(pass.equals(account.getPassword())){
+            if(pass.equals(newPassword)){
                 m.put("message","Mật khẩu không được giống cũ");
             }
             else{
                 //changePass
-                account.setPassword(newPass);
+                account.setPassword(newPassword);
                 accountRepository.save(account);
                 if(account.getEmail()!=null)
                 emailSenderService.sendMail(account.getEmail(),"Travel app thông báo","Mật khẩu tài khoản của bạn đã thay đổi vào lúc "+java.time.LocalDateTime.now());

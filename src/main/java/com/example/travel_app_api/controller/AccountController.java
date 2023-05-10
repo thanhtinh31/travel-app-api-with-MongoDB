@@ -2,6 +2,7 @@ package com.example.travel_app_api.controller;
 
 import com.example.travel_app_api.model.Account;
 import com.example.travel_app_api.request.ChangePasswordRequest;
+import com.example.travel_app_api.response.AccountResponse;
 import com.example.travel_app_api.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,8 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
     @GetMapping
-    public List<Account> getListAccount(){
-        List<Account> accounts= accountService.listAcount();
+    public List<AccountResponse> getListAccount(){
+        List<AccountResponse> accounts= accountService.listAcount();
         return accounts;
     }
     @GetMapping("/getAccount/{id}")
@@ -31,7 +32,7 @@ public class AccountController {
     }
 
     @GetMapping("/active")
-    public List<Account> getAccountActive(){
+    public List<AccountResponse> getAccountActive(){
         return accountService.getActive();
     }
     @PostMapping

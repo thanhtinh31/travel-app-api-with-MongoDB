@@ -4,6 +4,7 @@ import com.example.travel_app_api.model.Account;
 import com.example.travel_app_api.model.Category;
 import com.example.travel_app_api.model.Invoice;
 import com.example.travel_app_api.model.Tour;
+import com.example.travel_app_api.response.AccountResponse;
 import com.example.travel_app_api.response.TopTour;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class StatisticalService {
 
     public Map<String,Object> thongketaikhoan(){
         Map<String,Object> m=new HashMap<>();
-        List<Account> accounts=accountService.listAcount();
+        List<AccountResponse> accounts=accountService.listAcount();
         int admin=0,seller=0,user=0,lock=0;
         for(int i=0;i<accounts.size();i++){
             if(accounts.get(i).isStatus()==false) lock++;
@@ -75,7 +76,7 @@ public class StatisticalService {
     }
     public List<Map<String,Object>> topAccount(int sl){
         Map<String,Object> m=new HashMap<>();
-        List<Account> accounts=accountService.listAcount();
+        List<AccountResponse> accounts=accountService.listAcount();
         List<Map<String,Object>> lists=new ArrayList<>();
         for(int i=0;i<accounts.size();i++){
             lists.add(countHd(accounts.get(i).getId()));
