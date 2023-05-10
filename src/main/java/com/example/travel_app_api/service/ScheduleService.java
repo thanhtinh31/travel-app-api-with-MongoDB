@@ -96,7 +96,7 @@ public class ScheduleService {
         }
         else
         if(checkExist(schedule.getIdTour(),formatter.format(schedule.getDayStart()),schedule.getAddressStart())==1){
-            m.put("message","Đã ton tại lịch trình");
+            m.put("message","Đã tồn tại lịch trình");
             m.put("status","0");
         }
         else{
@@ -112,7 +112,7 @@ public class ScheduleService {
         Date dayNow=new Date();
         Schedule schedule1 = scheduleRepository.findById(schedule.getId()).get();
         if(!dayNow.before(schedule.getDayStart())){
-            m.put("message","Cập nhật thất bại, Ngày khong hợp lệ");
+            m.put("message","Cập nhật thất bại, Ngày không hợp lệ");
             m.put("status","0");
             return m;
         }
@@ -157,7 +157,7 @@ public class ScheduleService {
         else{
             scheduleRepository.deleteById(id);
             m.put("status","1");
-            m.put("message","Xóa thành cong");
+            m.put("message","Xóa thành công");
         }
         return m;
     }
@@ -272,7 +272,7 @@ public class ScheduleService {
         Schedule schedule=getSchedule(id);
         schedule.setProgress(progress);
         scheduleRepository.save(schedule);
-        return "Thanh cong";
+        return "Thành công";
     }
     public Map<String,Object> countPeople(String idSchedule){
         Map<String,Object> m=new HashMap<>();

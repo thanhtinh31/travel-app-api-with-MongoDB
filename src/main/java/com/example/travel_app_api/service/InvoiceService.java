@@ -24,6 +24,8 @@ public class InvoiceService {
     @Autowired
     private AccountService accountService;
     @Autowired
+    private TourService tourService;
+    @Autowired
     private  EmailSenderService emailSenderService;
     public List<Invoice> getListInvoice(){
         return invoiceRepository.findAll();
@@ -230,6 +232,8 @@ public class InvoiceService {
         m.put("status",invoice.getStatus());
         m.put("totalpeople",scheduleService.countPeople(invoice.getIdSchedule()));
         m.put("amount",invoice.getAmount());
+        m.put("payments",invoice.getPayments());
+        m.put("payDay",invoice.getPayDay());
         Schedule schedule=scheduleService.getSchedule(invoice.getIdSchedule());
         long getDiff = schedule.getDayStart().getTime() - now.getTime();
         long getDaysDiff = TimeUnit.MILLISECONDS.toDays(getDiff);
@@ -242,6 +246,7 @@ public class InvoiceService {
         m.put("progress",schedule.getProgress());
         Tour tour=scheduleService.getTour(schedule.getId());
         m.put("vehicle",tour.getVehicle());
+        m.put("inteval",tour.getInteval());
         m.put("title",tour.getTitle());
         m.put("subTitle",tour.getSubTitle());
         m.put("services",tour.getIdService());
@@ -249,6 +254,7 @@ public class InvoiceService {
         m.put("price",tour.getPrice());
         m.put("sale",tour.getSale());
         m.put("address",tour.getAddress());
+        m.put("star",tourService.danhGia(tour.getId()));
 
         return m;
     }

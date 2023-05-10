@@ -1,10 +1,13 @@
 package com.example.travel_app_api.repository;
 
 import com.example.travel_app_api.model.Account;
+import com.example.travel_app_api.model.Schedule;
+import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -19,6 +22,8 @@ public interface AccountRepository extends MongoRepository<Account,String> {
 
     @Query("{'email' : ?0 ,'password' : ?1 }")
     public Account login(String email,String password);
+    @Aggregation(pipeline = {"{'$sort':{'typeAccount':-1}}"})
+    List<Account> getAll();
 
 
 }

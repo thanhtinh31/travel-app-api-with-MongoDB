@@ -105,11 +105,11 @@ public class TourService {
     }
     public String deleteTour(String idTour){
         if(scheduleService.getListScheduleByIdTour(idTour).size()!=0){
-            return "Vui long huy tat ca lich trinh de co the xoa tour";
+            return "Không thể xóa tour đã có lịch trình";
         }
         else {
             tourRepository.deleteById(idTour);
-            return "Xoa tour thanh cong";
+            return "Xóa tour thành công";
         }
     }
     public List<Tour> searchTour(String key){
@@ -122,9 +122,8 @@ public class TourService {
         for(int i=0;i<list.size();i++)
         {
             if(scheduleService.getListScheduleByIdTour(list.get(i)).size()!=0){
-                return "Tour đã co lich - khong duoc xoa";
+                return "Tour đã có lịch - Không thể xóa";
             }
-
         }
         tourRepository.deleteAllById(list);
         return "Xóa thành công";

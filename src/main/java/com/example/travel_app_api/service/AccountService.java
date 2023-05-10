@@ -21,7 +21,7 @@ public class AccountService {
     @Autowired
     private EmailSenderService emailSenderService;
     public List<Account> listAcount(){
-        return accountRepository.findAll();
+        return accountRepository.getAll();
     }
     public Account getAccountById(String id){return accountRepository.findById(id).get();}
     public Map<String,Object> login(String email,String password){
