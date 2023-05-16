@@ -86,6 +86,9 @@ public class ScheduleService {
         return schedule;
 
     }
+    public Schedule addnew(Schedule schedule){
+        return scheduleRepository.save(schedule);
+    }
     public Map<String,Object> addSchedule(Schedule schedule){
         Map<String,Object> m=new HashMap<>();
         Date dayNow=new Date();
@@ -128,7 +131,8 @@ public class ScheduleService {
             schedule1.setTourGuide(schedule.getTourGuide());
             schedule1.setAddressStart(schedule.getAddressStart());
             schedule1.setStatus(schedule.isStatus());
-
+            schedule1.setExpectedPeople(schedule.getExpectedPeople());
+            schedule1.setType(schedule.getType());
             scheduleRepository.save(schedule1);
             m.put("message","Cập nhật lịch trình thành công");
             m.put("status","1");
@@ -215,6 +219,36 @@ public class ScheduleService {
         m.put("dahuy",dahuy);
         return m;
     }
+
+    public List<Map<String,Object>> getListScheduleByDayStart(String day){
+        LocalDate dayStart = LocalDate.parse(day,
+                DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+        LocalDate dayStart1 = dayStart.plusDays(1);
+        List <Map<String,Object>> list=new ArrayList<>();
+        List<Schedule> schedules= scheduleRepository.getListScheduleByDate(dayStart,dayStart1);
+        for (int i=0;i<schedules.size();i++)
+        {
+            Tour tour=getTour(schedules.get(i).getId());
+            Map<String,Object> m=new HashMap<>();
+            m.put("dayStart",schedules.get(i).getDayStart());
+            m.put("tour",tour.getTitle());
+            m.put("id",schedules.get(i).getId());
+            m.put("progress",schedules.get(i).getProgress());
+            m.put("dayStart",schedules.get(i).getDayStart());
+            m.put("addressStart",schedules.get(i).getAddressStart());
+            m.put("idTour",tour.getId());
+            m.put("status",schedules.get(i).isStatus());
+            list.add(m);
+        }
+        return list;
+    }
+
+    public List<Schedule> getScheduleByProgress(int progress){
+        return scheduleRepository.getListScheduleByProgress(progress);
+    }
+    public List<Schedule> getScheduleByIdTourAndProgress(String idTour,int progress){
+        return scheduleRepository.getListScheduleByIdTourAndProgress(idTour,progress);
+    }
     public List<Schedule> quanLyChotTour(String loai){
         List<DetailSchedule> list=new ArrayList<>();
         long millis = System.currentTimeMillis();
@@ -245,7 +279,7 @@ public class ScheduleService {
         if(lydo!=null&&idSchedule!=null) {
             Schedule schedule = getSchedule(idSchedule);
             schedule.setStatus(false);
-            schedule.setProgress(3);
+            schedule.setProgress(4);
             scheduleRepository.save(schedule);
             List<Invoice> invoices = invoiceRepository.getListInvoiceByIdSchedule(idSchedule);
             List<String> listEmail = new ArrayList<>();

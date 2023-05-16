@@ -4,6 +4,7 @@ import com.example.travel_app_api.model.Tour;
 import com.example.travel_app_api.repository.TourRepository;
 import com.example.travel_app_api.request.FilterTour;
 import com.example.travel_app_api.response.ItemTour;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -54,14 +55,14 @@ public class TourService {
         return total/ratings.size();
     }
 
-    public List<Tour> getTourFilter(FilterTour filterTour){
+    public List<Tour> getTourFilter(@NotNull FilterTour filterTour){
         if(filterTour.getAddress()==null){
             if(filterTour.getIdCategory()==null) return tourRepository.filterNoAddressNoCategory(filterTour.getGt(),filterTour.getLt(),filterTour.getSort());
             else return tourRepository.filterNoAddress(filterTour.getIdCategory(),filterTour.getGt(),filterTour.getLt(),filterTour.getSort());
         }else if(filterTour.getIdCategory()==null) return tourRepository.filterNoCategory(filterTour.getAddress(),filterTour.getGt(),filterTour.getLt(),filterTour.getSort());
         else return tourRepository.filter(filterTour.getAddress(),filterTour.getIdCategory(),filterTour.getGt(),filterTour.getLt(),filterTour.getSort());
     };
-    public Map<String,Object> addTour(Tour tour) {
+    public Map<String,Object> addTour(@NotNull Tour tour) {
         Map<String, Object> m = new HashMap<>();
         if (tour.getIdAccount() == null) {
             m.put("message", "Không thành công");
@@ -82,7 +83,7 @@ public class TourService {
     public List<Tour> getTourByCategory(String idCategory){
         return tourRepository.getListTourByCategory(idCategory);
     }
-    public Tour updateTour(Tour tour){
+    public Tour updateTour(@NotNull Tour tour){
         LocalDateTime now=LocalDateTime.now();
         Tour tour1=tourRepository.findById(tour.getId()).get();
         tour1.setTitle(tour.getTitle());
@@ -118,7 +119,7 @@ public class TourService {
     public int countTour(){
         return tourRepository.findAll().size();
     }
-    public String deleteListTour(List<String> list){
+    public String deleteListTour(@NotNull List<String> list){
         for(int i=0;i<list.size();i++)
         {
             if(scheduleService.getListScheduleByIdTour(list.get(i)).size()!=0){

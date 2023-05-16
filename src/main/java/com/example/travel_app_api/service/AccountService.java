@@ -96,6 +96,7 @@ public class AccountService {
         return accountRepository.getAcountActive();
     }
     public Account addAccount(Account account){
+        if(accountRepository.getAcountByEmail(account.getEmail())!=null) return null;
         String pass= Base64.getEncoder().encodeToString(account.getPassword().getBytes());
         account.setPassword(pass);
         return accountRepository.save(account);

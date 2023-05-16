@@ -230,13 +230,13 @@ public class InvoiceService {
         Invoice invoice=getInvoiceById(idInvoice);
         m.put("people",invoice.getPeople());
         m.put("status",invoice.getStatus());
-        m.put("totalpeople",scheduleService.countPeople(invoice.getIdSchedule()));
         m.put("amount",invoice.getAmount());
         m.put("payments",invoice.getPayments());
         m.put("payDay",invoice.getPayDay());
         Schedule schedule=scheduleService.getSchedule(invoice.getIdSchedule());
         long getDiff = schedule.getDayStart().getTime() - now.getTime();
         long getDaysDiff = TimeUnit.MILLISECONDS.toDays(getDiff);
+        m.put("expectedPeople",schedule.getExpectedPeople());
         m.put("dayStart",schedule.getDayStart());
         m.put("countDay",getDaysDiff);
         m.put("addressStart",schedule.getAddressStart());

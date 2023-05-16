@@ -8,8 +8,6 @@ import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +28,7 @@ public interface TourRepository extends MongoRepository<Tour,String> {
     @Aggregation(pipeline = {"{'$sort':{'id':-1}}"})
     List<Tour> getAllTour();
 
-    @Aggregation(pipeline = {"{'$match':{'status': true}}","{ $limit : 6 }"})
+    @Aggregation(pipeline = {"{'$match':{'status': true}}","{'$sort':{'id':-1}}","{ $limit : 6 }"})
     List<ItemTour> getListTourHomeActive();
     @Aggregation(pipeline = {"{'$match':{ $text: { $search: ?0 } }}","{'$match':{'idCategory':{$in:?1}}}", "{'$match':{'price':{$gt:?2}}}","{'$match':{'price':{$lt:?3}}}","{'$sort':{'price':?4}}","{'$match':{'status':true}}"})
     List<Tour> filter(String address,List<String> idCategory,double gt,double lt,int sort);

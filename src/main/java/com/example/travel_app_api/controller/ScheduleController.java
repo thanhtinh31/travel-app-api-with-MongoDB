@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -69,10 +70,22 @@ public class ScheduleController {
     public Map<String,Object> getDetailPeopleById(@PathVariable String id){
         return scheduleService.getDetaiPeopleSchedule(id);
     }
+    @GetMapping("/getlistschedulebydaystart")
+    public List<Map<String,Object>> getListScheduleByday(@RequestParam String dayStart){
+        return scheduleService.getListScheduleByDayStart(dayStart);
+    }
 
     @GetMapping("/listdetailschedule/{loai}")
     public List<Schedule> getListDetailSchedule(@PathVariable String loai){
         return scheduleService.quanLyChotTour(loai);
+    }
+    @GetMapping("/progress/{progress}")
+    public List<Schedule> getListDetailSchedule(@PathVariable int progress){
+        return scheduleService.getScheduleByProgress(progress);
+    }
+    @GetMapping("/idtourprogress/{idTour}/{progress}")
+    public List<Schedule> getListDetailSchedule(@PathVariable String idTour,@PathVariable int progress){
+        return scheduleService.getScheduleByIdTourAndProgress(idTour,progress);
     }
 
     @PostMapping()

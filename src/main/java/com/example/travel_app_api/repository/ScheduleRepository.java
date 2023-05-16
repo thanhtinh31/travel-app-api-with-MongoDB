@@ -25,7 +25,7 @@ public interface ScheduleRepository extends MongoRepository<Schedule, String> {
 
 
    // @Query(" {'dayStart': {$gt:?0}}" ) //{$or: [{ 'idTour' : ?0 }, {'dayStart': { }}]}
-    @Aggregation(pipeline = {"{'$match':{'dayStart': {$gt:?0}}}","{'$match':{'status': true,'progress':{ $in: [0,1,2] }}}","{'$sort':{'dayStart':1}}","{ $limit : 3 }"})
+    @Aggregation(pipeline = {"{'$match':{'dayStart': {$gt:?0}}}","{'$match':{'status': true,'progress':{ $in: [0] }}}","{'$sort':{'dayStart':1}}","{ $limit : 3 }"})
     List<Schedule> getListScheduleActive( Date day);
     @Query("{$and: [{ 'idTour' : ?0 }, {'dayStart': {$lt:?1}}]}") //{$or: [{ 'idTour' : ?0 }, {'dayStart': { }}]}
     List<Schedule> getListScheduleByTourIdPass(String idTour, Date day);
@@ -53,6 +53,14 @@ public interface ScheduleRepository extends MongoRepository<Schedule, String> {
 
     @Aggregation(pipeline = {"{'$match':{'progress':{ $in: [3] }}}","{'$sort':{'dayStart':1}}"})
     List<Schedule> getListScheduleDaHuy( Date day);
+    @Aggregation(pipeline = {"{'$match':{'dayStart': {$gte:?0}}}","{'$match':{'dayStart': {$lt:?1}}}"})
+    List<Schedule> getListScheduleByDate( LocalDate day,LocalDate day2);
+    @Aggregation(pipeline = {"{'$match':{'progress': ?0}}","{'$sort':{'dayStart':1}}"})
+    List<Schedule> getListScheduleByProgress(int progress);
+    @Aggregation(pipeline = {"{'$match':{'idTour': ?0,'progress':?1,'status':true}}","{'$sort':{'dayStart':1}}"})
+    List<Schedule> getListScheduleByIdTourAndProgress(String idTour,int progress);
+
+
 
 
 
