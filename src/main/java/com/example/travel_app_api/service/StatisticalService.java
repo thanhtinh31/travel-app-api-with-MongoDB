@@ -1,9 +1,6 @@
 package com.example.travel_app_api.service;
 
-import com.example.travel_app_api.model.Account;
-import com.example.travel_app_api.model.Category;
-import com.example.travel_app_api.model.Invoice;
-import com.example.travel_app_api.model.Tour;
+import com.example.travel_app_api.model.*;
 import com.example.travel_app_api.response.AccountResponse;
 import com.example.travel_app_api.response.TopTour;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,7 +172,6 @@ public class StatisticalService {
         }
         return list;
     }
-
     public Map<String,Object> thongKeDoanhThuTheoThang(String year) throws ParseException {
         Map<String,Object> m = new HashMap<>();
         List<Invoice> invoices=invoiceService.getListInvoiceByYear(year);
@@ -214,7 +210,6 @@ public class StatisticalService {
         m.put("t12",t12);
         return m;
     }
-
     public Map<String,Object> thongKeTour(){
         Map<String,Object> m=new HashMap<>();
         m.put("countTour",tourService.countTour());
@@ -238,6 +233,24 @@ public class StatisticalService {
         return topTours.subList(0,sl);
     }
 
+    public Map<String,Object> thongKeLichTrinh(){
+        Map<String,Object> m=new HashMap<>();
+        List<Schedule> schedules=scheduleService.getListSchedule();
+        int ckh=0,dkh=0,dht=0,dh=0;
+        for(int i=0;i<schedules.size();i++)
+        {
+            if(schedules.get(i).getProgress()==1||schedules.get(i).getProgress()==0) ckh=ckh+1;
+            else if(schedules.get(i).getProgress()==2) dkh=dkh+1;
+            else if(schedules.get(i).getProgress()==3) dht=dht+1;
+            else dh=dh+1;
+
+        }
+        m.put("ckh",ckh);
+        m.put("dkh",dkh);
+        m.put("dht",dht);
+        m.put("dh",dh);
+        return m;
+    }
 
 
 

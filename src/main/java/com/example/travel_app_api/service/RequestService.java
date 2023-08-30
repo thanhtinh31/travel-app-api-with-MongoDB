@@ -53,6 +53,10 @@ public class RequestService {
         emailSenderService.sendMailHtml(request.getEmail(),"Thông báo","Yêu cầu đặt tour của bạn đã được xác nhận, Vui lòng thanh toán hóa đơn");
         return m;
     }
+    public String emailThongBao(String noidung){
+        String body="";
+        return body;
+    }
     public Map<String,Object> cancel(String id){
         Request request= requestRepository.findById(id).get();
         request.setAccept(2);
